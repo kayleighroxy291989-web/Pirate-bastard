@@ -1,15 +1,9 @@
 {
-  "name": "Kayleigh's Pirate Bastard",
-  "short_name": "Pirate Bastard",
+  "name": "Kayleigh's Sharpshooter Bastard",
+  "short_name": "Sharpshooter Bastard",
   "start_url": "./",
   "display": "standalone",
+  "orientation": "landscape",
   "theme_color": "#071523",
-  "background_color": "#071523",
-  "icons": [
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    }
-  ]
+  "background_color": "#071523"
 }

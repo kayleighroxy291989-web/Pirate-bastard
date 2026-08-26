@@ -1,45 +1,34 @@
 <!doctype html><html><head>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#071523"><link rel="manifest" href="manifest.json">
-<title>Kayleigh's Pirate Bastard</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#071523"><link rel="manifest" href="manifest.json"><title>Kayleigh's Sharpshooter Bastard</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(#16465d,#071523);color:#f7f0d0;font-family:system-ui;text-align:center}
-header{padding:14px;background:#030b13;font-weight:1000;font-size:24px}.arena{position:relative;max-width:900px;height:58vh;min-height:390px;margin:12px auto;border:3px solid #b67b27;border-radius:22px;overflow:hidden;background:linear-gradient(#287489 0 45%,#6b4223 45%)}
-.pirate{position:absolute;bottom:15%;width:180px}.player{left:8%}.enemy{right:8%}.avatar{font-size:105px}.name{font-weight:1000;background:#071523dd;border-radius:99px;padding:5px}.hp{height:18px;background:#241515;border:2px solid #f5e8b1;border-radius:99px}.hp i{display:block;height:100%;background:#ef5144}
-.bubble{position:absolute;top:5%;left:50%;transform:translateX(-50%);background:#071523dd;padding:10px 16px;border-radius:15px;font-weight:900}
-.points{margin:10px}.point{display:inline-block;width:28px;height:28px;margin:3px;border-radius:7px;background:#f2c34f}.off{background:#555}
-.actions{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:900px;margin:auto}button{padding:13px 7px;border:0;border-radius:12px;font-weight:1000;background:#f2c34f;box-shadow:0 4px #91651a}button:disabled{opacity:.35}
-#log{min-height:40px;padding:10px;font-weight:900}.overlay{display:none;position:fixed;inset:0;background:#000b;align-items:center;justify-content:center}.modal{background:#123b4a;padding:28px;border-radius:22px;border:2px solid #b67b27}
-@media(max-width:620px){.actions{grid-template-columns:repeat(3,1fr)}.pirate{width:125px}.avatar{font-size:78px}}
-</style></head><body>
-<header>🏴‍☠️ Kayleigh's Pirate Bastard <span id="stage">Stage 1</span></header>
-<div>💰 <b id="gold">0</b></div>
-<div class="arena"><div class="bubble" id="bubble">Choose your move, ye magnificent bastard.</div>
-<div class="pirate player"><div class="avatar">🏴‍☠️</div><div class="name">KAYLEIGH</div><div class="hp"><i id="ph"></i></div></div>
-<div class="pirate enemy"><div class="avatar" id="ea">☠️</div><div class="name" id="en">DECKHAND</div><div class="hp"><i id="eh"></i></div></div></div>
-<div class="points" id="points"></div>
-<div class="actions">
-<button data-a="attack">⚔️ Slash<br>1 AP</button><button data-a="shoot">🔫 Shoot<br>1 AP</button>
-<button data-a="block">🛡️ Block<br>1 AP</button><button data-a="dodge">🏃 Dodge<br>1 AP</button><button data-a="special">💥 SPECIAL<br>3 AP</button>
-</div><div id="log">🟨🟨🟨🟨🟨 — Five action points. Make 'em count.</div>
-<div class="overlay" id="ov"><div class="modal"><h2 id="mt"></h2><p id="mx"></p><button id="mb"></button></div></div>
+*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#0a2230;color:#fff3c8;font-family:system-ui;touch-action:none}
+#game{height:100vh;position:relative;background:linear-gradient(#5ebbd5 0 53%,#17627b 53% 64%,#70451f 64%);overflow:hidden}
+header{position:absolute;z-index:10;top:0;left:0;right:0;padding:11px 15px;background:#04131ee8;display:flex;justify-content:space-between;font-weight:1000;font-size:19px}
+#hint{position:absolute;z-index:8;top:13%;left:50%;transform:translateX(-50%);background:#061522dd;padding:9px 14px;border-radius:14px;font-weight:900;text-align:center;max-width:88%}
+#enemy{position:absolute;z-index:3;font-size:82px;transition:transform .12s,opacity .25s}
+#hp{position:absolute;z-index:4;height:15px;background:#251414;border:2px solid #f6df9d;border-radius:10px}.hpfill{display:block;height:100%;background:#e9443c}
+#player{position:absolute;left:11%;bottom:18%;font-size:88px;z-index:4}#gun{position:absolute;left:24%;bottom:27%;font-size:46px;z-index:7;transform-origin:left center}
+#cross{position:absolute;z-index:20;width:55px;height:55px;border:3px solid white;border-radius:50%;display:none;transform:translate(-50%,-50%);box-shadow:0 0 0 2px #0008}
+#cross:before,#cross:after{content:"";position:absolute;background:white}.cross:before{left:50%;top:0;bottom:0;width:2px}.cross:after{top:50%;left:0;right:0;height:2px}
+#fire{position:absolute;z-index:25;right:6%;bottom:7%;width:95px;height:95px;border-radius:50%;background:#bd3025;color:white;font-weight:1000;font-size:17px;border:4px solid #f6dfa0;box-shadow:0 7px #65180f}
+#o{display:none;position:fixed;inset:0;z-index:50;background:#000b;align-items:center;justify-content:center;padding:20px}.modal{background:#123b4b;border:2px solid #c08a2d;border-radius:24px;padding:28px;text-align:center;width:min(500px,100%)}.modal button{padding:14px 25px;font-weight:1000;border:0;border-radius:12px;background:#f2c34f}
+@media(max-width:600px){#enemy{font-size:70px}#player{font-size:72px}#gun{font-size:38px}}
+</style></head><body><div id="game"><header><span id="stage"></span><span id="bullets"></span></header><div id="hint"></div><div id="enemy">🏴‍☠️</div><div id="hp"><i class="hpfill"></i></div><div id="player">🏴‍☠️</div><div id="gun">🔫</div><div id="cross"></div><button id="fire">FIRE<br>💥</button></div>
+<div id="o"><div class="modal"><h1 id="title"></h1><p id="text"></p><button id="next"></button></div></div>
 <script>
-const E=[["DECKHAND","☠️",90,12],["GUNNER","🏴‍☠️",115,16],["SWORDMASTER","⚔️",145,20],["BOMBARDIER","💣",175,23],["CAPTAIN GOBLIN","👹",230,28]];
-let s=JSON.parse(localStorage.getItem("pirateBastardSave")||"null"),stage=s?.stage||1,gold=s?.gold||0,ph,eh,max,ap,block,over;
+const types=[["DECKHAND","🏴‍☠️"],["GUNNER","💀"],["BRUTE","👹"],["BOMBER","💣"],["CAPTAIN GOBLIN","👺"]];
+let save=JSON.parse(localStorage.getItem("pirateSharpshooterSave")||"null"),stage=save?.stage||1,gold=save?.gold||0,shots=0,hp=0,maxhp=0,dead=false,ax=innerWidth*.78,ay=innerHeight*.45,drag=false;
 const $=x=>document.getElementById(x);
-function start(){let e=E[Math.min(stage-1,E.length-1)];ph=100;eh=max=e[2];ap=5;block=false;over=false;$("stage").textContent="Stage "+stage;$("en").textContent=e[0];$("ea").textContent=e[1];say("Choose your move, ye magnificent bastard.");render()}
-function say(x){$("log").textContent=x;$("bubble").textContent=x}
-function render(){$("ph").style.width=ph+"%";$("eh").style.width=eh/max*100+"%";$("gold").textContent=gold;$("points").innerHTML=[0,1,2,3,4].map(i=>'<span class="point '+(i>=ap?"off":"")+'"></span>').join("");document.querySelectorAll(".actions button").forEach(b=>b.disabled=over||ap<(b.dataset.a=="special"?3:1))}
-function enemy(){let e=E[Math.min(stage-1,E.length-1)],d=Math.floor(e[3]*(.8+Math.random()*.45));if(block){d=Math.floor(d*.35);say("🛡️ BLOCK! The bastard's attack got mostly fucking stopped.")}else if(Math.random()<.15){say("💨 The bastard missed.");render();return}else say("💥 "+e[0]+" hits you for "+d+" damage.");ph=Math.max(0,ph-d);block=false;if(ph<=0)lose()}
-function act(a){if(over)return;let c=a=="special"?3:1;if(ap<c)return;ap-=c;
-if(a=="attack"){let d=18+Math.floor(Math.random()*11);say("⚔️ SLASH! "+d+" damage.");eh=Math.max(0,eh-d)}
-if(a=="shoot"){let d=13+Math.floor(Math.random()*15);say("🔫 BOOM! "+d+" damage.");eh=Math.max(0,eh-d)}
-if(a=="block"){block=true;say("🛡️ Guard up. Let the bastard try.")}
-if(a=="dodge"){if(Math.random()<.75){say("🏃 DODGE! You fucking vanished.");render();return}else say("🏃 You tripped over your boots.")}
-if(a=="special"){let d=45+Math.floor(Math.random()*26);say("💥 SPECIAL! "+d+" damage.");eh=Math.max(0,eh-d)}
-if(eh<=0){win();return}if(ap==0){ap=5;enemy()}render()}
-function win(){over=true;let reward=100+stage*50;gold+=reward;localStorage.setItem("pirateBastardSave",JSON.stringify({stage:stage+1,gold}));$("mt").textContent="🏆 FUCKING VICTORY";$("mx").textContent="You defeated the bastard. +"+reward+" gold. Stage "+(stage+1)+" awaits.";$("mb").textContent="NEXT STAGE 😎";$("ov").style.display="flex";render()}
-function lose(){over=true;$("mt").textContent="☠️ YOU GOT FUCKING SUNK";$("mx").textContent="Your saved progress is safe. Try the stage again.";$("mb").textContent="TRY AGAIN 😈";$("ov").style.display="flex";render()}
-document.querySelectorAll(".actions button").forEach(b=>b.onclick=()=>act(b.dataset.a));$("mb").onclick=()=>{$("ov").style.display="none";if($("mb").textContent.startsWith("NEXT"))stage++;start()};start();
-if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+function bulletsFor(s){return Math.min(8,5+Math.floor((s-1)/3))}
+function healthFor(s){return Math.min(3,1+Math.floor((s-1)/3))}
+function start(){shots=bulletsFor(stage);hp=maxhp=healthFor(stage);dead=false;let t=types[Math.min(stage-1,4)];$("stage").textContent="STAGE "+stage;$("enemy").textContent=t[1];$("enemy").style.opacity=1;placeEnemy();$("hint").textContent="🎯 AIM AT THE BASTARD — DRAG, THEN FIRE 🖕😎";render()}
+function placeEnemy(){let x=innerWidth*(.68+Math.random()*.20),y=innerHeight*(.35+Math.random()*.22);$("enemy").style.left=x+"px";$("enemy").style.top=y+"px";$("hp").style.left=(x-5)+"px";$("hp").style.top=(y+90)+"px";$("hp").style.width=Math.min(170,innerWidth*.25)+"px"}
+function render(){$("bullets").textContent="🔫 ".repeat(shots);$("hp").firstElementChild.style.width=(hp/maxhp*100)+"%"}
+function aim(x,y){ax=x;ay=y;$("cross").style.left=x+"px";$("cross").style.top=y+"px";$("cross").style.display="block";let a=Math.atan2(y-innerHeight*.72,x-innerWidth*.25)*180/Math.PI;$("gun").style.transform="rotate("+a+"deg)"}
+function fireShot(){if(dead||shots<=0)return;shots--;let r=$("enemy").getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height*.48,d=Math.hypot(ax-cx,ay-cy),hit=d<105,head=d<45;render();if(hit){let damage=head?2:1;hp=Math.max(0,hp-damage);$("hint").textContent=head?"💥 HEADSHOT! 2 DAMAGE!":"🎯 FUCKING HIT! 1 DAMAGE!";$("enemy").style.transform="translateX(-12px)";setTimeout(()=>$("enemy").style.transform="",100);if(hp<=0){win();return}}else $("hint").textContent="💨 MISSED! You fucking turnip.";if(shots===0&&hp>0)lose()}
+function win(){dead=true;$("enemy").style.opacity=0;gold+=50*stage;localStorage.setItem("pirateSharpshooterSave",JSON.stringify({stage:stage+1,gold}));$("title").textContent="🏆 FUCKING VICTORY";$("text").textContent="Bastard eliminated. +"+50*stage+" gold. Stage "+(stage+1)+" unlocked.";$("next").textContent="NEXT STAGE 😎";$("o").style.display="flex"}
+function lose(){dead=true;$("title").textContent="☠️ DEFEAT";$("text").textContent="Out of bullets. Your progress is safe — have another fucking go.";$("next").textContent="TRY AGAIN 🔫";$("o").style.display="flex"}
+addEventListener("pointerdown",e=>{if(e.target.id==="fire"){fireShot();return}drag=true;aim(e.clientX,e.clientY)});addEventListener("pointermove",e=>{if(drag)aim(e.clientX,e.clientY)});addEventListener("pointerup",()=>drag=false);
+$("next").onclick=()=>{$("o").style.display="none";if($("next").textContent.startsWith("NEXT"))stage++;start()};start();
 </script></body></html>
