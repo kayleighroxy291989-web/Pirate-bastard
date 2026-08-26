@@ -1,0 +1,45 @@
+<!doctype html><html><head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071523"><link rel="manifest" href="manifest.json">
+<title>Kayleigh's Pirate Bastard</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(#16465d,#071523);color:#f7f0d0;font-family:system-ui;text-align:center}
+header{padding:14px;background:#030b13;font-weight:1000;font-size:24px}.arena{position:relative;max-width:900px;height:58vh;min-height:390px;margin:12px auto;border:3px solid #b67b27;border-radius:22px;overflow:hidden;background:linear-gradient(#287489 0 45%,#6b4223 45%)}
+.pirate{position:absolute;bottom:15%;width:180px}.player{left:8%}.enemy{right:8%}.avatar{font-size:105px}.name{font-weight:1000;background:#071523dd;border-radius:99px;padding:5px}.hp{height:18px;background:#241515;border:2px solid #f5e8b1;border-radius:99px}.hp i{display:block;height:100%;background:#ef5144}
+.bubble{position:absolute;top:5%;left:50%;transform:translateX(-50%);background:#071523dd;padding:10px 16px;border-radius:15px;font-weight:900}
+.points{margin:10px}.point{display:inline-block;width:28px;height:28px;margin:3px;border-radius:7px;background:#f2c34f}.off{background:#555}
+.actions{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:900px;margin:auto}button{padding:13px 7px;border:0;border-radius:12px;font-weight:1000;background:#f2c34f;box-shadow:0 4px #91651a}button:disabled{opacity:.35}
+#log{min-height:40px;padding:10px;font-weight:900}.overlay{display:none;position:fixed;inset:0;background:#000b;align-items:center;justify-content:center}.modal{background:#123b4a;padding:28px;border-radius:22px;border:2px solid #b67b27}
+@media(max-width:620px){.actions{grid-template-columns:repeat(3,1fr)}.pirate{width:125px}.avatar{font-size:78px}}
+</style></head><body>
+<header>🏴‍☠️ Kayleigh's Pirate Bastard <span id="stage">Stage 1</span></header>
+<div>💰 <b id="gold">0</b></div>
+<div class="arena"><div class="bubble" id="bubble">Choose your move, ye magnificent bastard.</div>
+<div class="pirate player"><div class="avatar">🏴‍☠️</div><div class="name">KAYLEIGH</div><div class="hp"><i id="ph"></i></div></div>
+<div class="pirate enemy"><div class="avatar" id="ea">☠️</div><div class="name" id="en">DECKHAND</div><div class="hp"><i id="eh"></i></div></div></div>
+<div class="points" id="points"></div>
+<div class="actions">
+<button data-a="attack">⚔️ Slash<br>1 AP</button><button data-a="shoot">🔫 Shoot<br>1 AP</button>
+<button data-a="block">🛡️ Block<br>1 AP</button><button data-a="dodge">🏃 Dodge<br>1 AP</button><button data-a="special">💥 SPECIAL<br>3 AP</button>
+</div><div id="log">🟨🟨🟨🟨🟨 — Five action points. Make 'em count.</div>
+<div class="overlay" id="ov"><div class="modal"><h2 id="mt"></h2><p id="mx"></p><button id="mb"></button></div></div>
+<script>
+const E=[["DECKHAND","☠️",90,12],["GUNNER","🏴‍☠️",115,16],["SWORDMASTER","⚔️",145,20],["BOMBARDIER","💣",175,23],["CAPTAIN GOBLIN","👹",230,28]];
+let s=JSON.parse(localStorage.getItem("pirateBastardSave")||"null"),stage=s?.stage||1,gold=s?.gold||0,ph,eh,max,ap,block,over;
+const $=x=>document.getElementById(x);
+function start(){let e=E[Math.min(stage-1,E.length-1)];ph=100;eh=max=e[2];ap=5;block=false;over=false;$("stage").textContent="Stage "+stage;$("en").textContent=e[0];$("ea").textContent=e[1];say("Choose your move, ye magnificent bastard.");render()}
+function say(x){$("log").textContent=x;$("bubble").textContent=x}
+function render(){$("ph").style.width=ph+"%";$("eh").style.width=eh/max*100+"%";$("gold").textContent=gold;$("points").innerHTML=[0,1,2,3,4].map(i=>'<span class="point '+(i>=ap?"off":"")+'"></span>').join("");document.querySelectorAll(".actions button").forEach(b=>b.disabled=over||ap<(b.dataset.a=="special"?3:1))}
+function enemy(){let e=E[Math.min(stage-1,E.length-1)],d=Math.floor(e[3]*(.8+Math.random()*.45));if(block){d=Math.floor(d*.35);say("🛡️ BLOCK! The bastard's attack got mostly fucking stopped.")}else if(Math.random()<.15){say("💨 The bastard missed.");render();return}else say("💥 "+e[0]+" hits you for "+d+" damage.");ph=Math.max(0,ph-d);block=false;if(ph<=0)lose()}
+function act(a){if(over)return;let c=a=="special"?3:1;if(ap<c)return;ap-=c;
+if(a=="attack"){let d=18+Math.floor(Math.random()*11);say("⚔️ SLASH! "+d+" damage.");eh=Math.max(0,eh-d)}
+if(a=="shoot"){let d=13+Math.floor(Math.random()*15);say("🔫 BOOM! "+d+" damage.");eh=Math.max(0,eh-d)}
+if(a=="block"){block=true;say("🛡️ Guard up. Let the bastard try.")}
+if(a=="dodge"){if(Math.random()<.75){say("🏃 DODGE! You fucking vanished.");render();return}else say("🏃 You tripped over your boots.")}
+if(a=="special"){let d=45+Math.floor(Math.random()*26);say("💥 SPECIAL! "+d+" damage.");eh=Math.max(0,eh-d)}
+if(eh<=0){win();return}if(ap==0){ap=5;enemy()}render()}
+function win(){over=true;let reward=100+stage*50;gold+=reward;localStorage.setItem("pirateBastardSave",JSON.stringify({stage:stage+1,gold}));$("mt").textContent="🏆 FUCKING VICTORY";$("mx").textContent="You defeated the bastard. +"+reward+" gold. Stage "+(stage+1)+" awaits.";$("mb").textContent="NEXT STAGE 😎";$("ov").style.display="flex";render()}
+function lose(){over=true;$("mt").textContent="☠️ YOU GOT FUCKING SUNK";$("mx").textContent="Your saved progress is safe. Try the stage again.";$("mb").textContent="TRY AGAIN 😈";$("ov").style.display="flex";render()}
+document.querySelectorAll(".actions button").forEach(b=>b.onclick=()=>act(b.dataset.a));$("mb").onclick=()=>{$("ov").style.display="none";if($("mb").textContent.startsWith("NEXT"))stage++;start()};start();
+if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script></body></html>

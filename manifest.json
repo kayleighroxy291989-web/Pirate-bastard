@@ -1,0 +1,15 @@
+{
+  "name": "Kayleigh's Pirate Bastard",
+  "short_name": "Pirate Bastard",
+  "start_url": "./",
+  "display": "standalone",
+  "theme_color": "#071523",
+  "background_color": "#071523",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
