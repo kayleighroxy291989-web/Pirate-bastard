@@ -46,7 +46,96 @@ header{position:absolute;z-index:10;top:0;left:0;right:0;padding:11px 15px;backg
 .shop{margin-top:14px;padding:12px;border:1px solid #c08a2d;border-radius:14px;background:#082c39}
 .shop button{padding:9px 11px;margin:3px;font-weight:900;border:0;border-radius:9px;background:#f2c34f}
 #shopmsg{min-height:22px;font-weight:900}
-</style></head><body><div id="game">
+
+/* === REALISM PASS: Pirate Deck === */
+body{
+  background:#07151d;
+  font-family:Georgia, "Times New Roman", serif;
+}
+#game{
+  background:
+    radial-gradient(ellipse at 50% 18%,#dcecf0 0 7%,transparent 25%),
+    linear-gradient(to bottom,#263d4c 0%,#547887 22%,#a8c5ca 46%,#164b60 47%,#0b3445 63%,#392617 64%,#17100c 100%);
+}
+#game:before{
+  content:"";
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 18% 27%,rgba(255,255,255,.22),transparent 18%),
+    radial-gradient(ellipse at 76% 20%,rgba(255,255,255,.16),transparent 20%),
+    repeating-linear-gradient(171deg,transparent 0 18px,rgba(255,255,255,.045) 19px 20px),
+    linear-gradient(90deg,rgba(0,0,0,.18),transparent 18% 82%,rgba(0,0,0,.22));
+  mix-blend-mode:screen;
+}
+#game:after{
+  content:"";
+  position:absolute;left:0;right:0;bottom:0;height:36%;
+  z-index:2;pointer-events:none;
+  background:
+    repeating-linear-gradient(3deg,transparent 0 34px,rgba(255,224,173,.09) 35px 37px),
+    repeating-linear-gradient(88deg,rgba(0,0,0,.12) 0 2px,transparent 3px 92px),
+    linear-gradient(#65401f,#2a170d);
+  box-shadow:inset 0 12px 25px rgba(0,0,0,.35);
+}
+header,.badge,#wind,#hint{
+  font-family:Georgia,serif;
+  letter-spacing:.03em;
+  text-shadow:0 2px 2px #000;
+  box-shadow:0 5px 18px rgba(0,0,0,.28);
+}
+#enemy.pirate-character,#player.archer-character{
+  filter:drop-shadow(0 14px 8px rgba(0,0,0,.52));
+}
+#enemy.pirate-character svg,#player.archer-character svg{
+  filter:drop-shadow(0 7px 4px rgba(0,0,0,.72)) saturate(.78) contrast(1.22);
+}
+#enemy.pirate-character:after,#player.archer-character:after{
+  content:"";
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(110deg,rgba(255,255,255,.16),transparent 30%,rgba(0,0,0,.18));
+  mix-blend-mode:overlay;border-radius:35%;
+}
+#hp{
+  background:#160d0b;
+  box-shadow:0 3px 10px rgba(0,0,0,.55);
+}
+.hpfill{
+  background:linear-gradient(#e95c50,#8e1611);
+  box-shadow:inset 0 2px 2px rgba(255,255,255,.25);
+}
+#cross{
+  border-color:rgba(255,244,210,.92);
+  box-shadow:0 0 0 2px #000b,0 0 18px rgba(255,255,255,.25);
+}
+#fire{
+  background:linear-gradient(#b74635,#65160f);
+  border-color:#d8b46c;
+  box-shadow:0 7px #35100b,0 0 22px rgba(255,110,50,.15);
+}
+#restart{
+  background:linear-gradient(#f4dfad,#c6a66a);
+  box-shadow:0 5px #735a32;
+}
+.speech{
+  font-family:Georgia,serif;
+  background:#f4ead0;
+  border-color:#33271c;
+  box-shadow:0 5px 14px #0009;
+}
+.modal{
+  background:linear-gradient(145deg,#102a35,#07171e);
+  border-color:#c39a52;
+  box-shadow:0 18px 60px #000c;
+}
+@keyframes oceanShimmer{
+  0%,100%{transform:translateX(-2%);opacity:.45}
+  50%{transform:translateX(2%);opacity:.7}
+}
+#game .ocean-glow{position:absolute;left:0;right:0;top:48%;height:15%;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent 0 11px,rgba(177,229,236,.13) 12px 14px);
+  animation:oceanShimmer 7s ease-in-out infinite;
+}
+</style></head><body><div id="game"><div class="ocean-glow"></div>
 <header><span id="stage"></span><span id="bullets"></span></header><div id="stats2">
 <span class="badge">🔥 COMBO <b id="combo">0</b></span>
 <span class="badge">💰 GOLD <b id="gold2">0</b></span>
