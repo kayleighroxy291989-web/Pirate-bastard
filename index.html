@@ -98,10 +98,10 @@ function playShooterAudio(which){
 }
 
 
-const pirateAudio = {
-  hit: new Audio("pirate_hit.mp3"),
-  miss: new Audio("pirate_miss_1.mp3"),
-  extra: new Audio("pirate_miss_2.mp3")
+const pirateAudio={
+ hit:new Audio("pirate_hit.mp3"),
+ miss:new Audio("pirate_miss_1.mp3"),
+ extra:new Audio("pirate_miss_2.mp3")
 };
 Object.values(pirateAudio).forEach(a=>{a.preload="auto";a.volume=1;});
 function playPirateAudio(which){
@@ -274,10 +274,12 @@ function fireShot(){
     else playShooterAudio("gotcha");
   },pirateDelay);
  }else{
-  combo=0;updateCombo();playPirateAudio(Math.random()<0.5?"miss":"extra");missSfx();
-  const insults=["💨 YOU FUCKING MISSED, YA TURNIP!","💨 YA FUCKING MELT!","💨 YA FUCKING IDIOT!","💨 YA FUCKING POTATO!","💨 NICE SHOT, YA FUCKING WALNUT!","💨 NOT EVEN CLOSE, YA BELLEND!","💨 WHAT THE ACTUAL FUCK?!","💨 DID YOU AIM WITH YOUR FUCKING ELBOW?","💨 THAT ARROW JUST FUCKING GAVE UP!","💨 YOU COULDN'T HIT A BARN DOOR, YA TURNIP!"];
-  $("hint").textContent=insults[Math.floor(Math.random()*insults.length)];pirateLaugh()
- }
+  combo=0;updateCombo();
+  // A miss can ONLY play one of the two miss recordings.
+  playPirateAudio(Math.random()<0.5?"miss":"extra");
+  const insults=["💨 YOU FUCKING MISSED, YA TURNIP!","💨 YA FUCKING MELT!","💨 YA FUCKING IDIOT!","💨 YA FUCKING POTATO!","💨 NICE SHOT, YA FUCKING WALNUT!","💨 NOT EVEN FUCKING CLOSE, YA BELLEND!","💨 WHAT THE ACTUAL FUCK?!","💨 DID YOU AIM WITH YOUR FUCKING ELBOW?","💨 THAT ARROW JUST FUCKING GAVE UP!","💨 YOU COULDN'T HIT A BARN DOOR, YA TURNIP!"];
+  $("hint").textContent=insults[Math.floor(Math.random()*insults.length)];
+}
  if(shots===0&&hp>0)lose()
 }
 function win(){
