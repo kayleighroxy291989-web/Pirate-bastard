@@ -7,7 +7,6 @@
   "orientation": "portrait",
   "background_color": "#071523",
   "theme_color": "#071523",
-  "description": "Kayleigh's Pirate Bastard Sharpshooter game.",
   "icons": [
     {
       "src": "./icon.svg",

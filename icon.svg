@@ -1,13 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-<rect width="512" height="512" rx="110" fill="#071523"/>
-<circle cx="256" cy="256" r="205" fill="#17627b" stroke="#f6dfa0" stroke-width="18"/>
-<path d="M115 300h282" stroke="#70451f" stroke-width="32"/>
-<path d="M125 285Q256 105 387 285" fill="none" stroke="#e4d2a1" stroke-width="14"/>
-<path d="M125 285Q256 125 387 285" fill="none" stroke="#7b4326" stroke-width="25"/>
-<circle cx="256" cy="276" r="82" fill="#d8a06a" stroke="#211713" stroke-width="10"/>
-<path d="M174 260Q256 190 338 260L327 228Q256 170 185 228z" fill="#171a1e"/>
-<circle cx="226" cy="281" r="11" fill="#fff"/><circle cx="286" cy="281" r="11" fill="#fff"/>
-<path d="M225 320q31 20 62 0" fill="none" stroke="#241716" stroke-width="11"/>
-<path d="M190 348Q256 385 322 348v75H190z" fill="#31536e"/>
-<text x="256" y="475" text-anchor="middle" font-family="system-ui,sans-serif" font-size="42" font-weight="900" fill="#f6dfa0">PIRATE BASTARD</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="110" fill="#071523"/><circle cx="256" cy="256" r="205" fill="#17627b" stroke="#f6dfa0" stroke-width="18"/><path d="M115 300h282" stroke="#70451f" stroke-width="32"/><path d="M125 285Q256 105 387 285" fill="none" stroke="#e4d2a1" stroke-width="14"/><circle cx="256" cy="276" r="82" fill="#d8a06a" stroke="#211713" stroke-width="10"/><path d="M174 260Q256 190 338 260L327 228Q256 170 185 228z" fill="#171a1e"/><circle cx="226" cy="281" r="11" fill="#fff"/><circle cx="286" cy="281" r="11" fill="#fff"/><path d="M225 320q31 20 62 0" fill="none" stroke="#241716" stroke-width="11"/><path d="M190 348Q256 385 322 348v75H190z" fill="#31536e"/><text x="256" y="475" text-anchor="middle" font-family="system-ui,sans-serif" font-size="42" font-weight="900" fill="#f6dfa0">PIRATE BASTARD</text></svg>

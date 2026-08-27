@@ -38,7 +38,8 @@ header{position:absolute;z-index:10;top:0;left:0;right:0;padding:11px 15px;backg
 .speech{position:absolute;z-index:45;background:#fff;color:#171717;border:3px solid #171717;border-radius:18px;padding:9px 13px;font-weight:1000;font-size:18px;box-shadow:0 4px 0 #0008;animation:speechPop .8s ease-out forwards;pointer-events:none}
 @keyframes speechPop{0%{transform:scale(.4);opacity:0}15%{transform:scale(1.08);opacity:1}75%{opacity:1}100%{transform:translateY(-20px);opacity:0}}
 @media(max-width:600px){#enemy.pirate-character{width:145px;height:178px}#player.archer-character{width:175px;height:190px}.speech{font-size:15px}}
-</style></head><body><div id="game">
+#enemy.pirate-character{max-width:calc(100vw - 24px);max-height:calc(60vh - 120px)}
+#hp{max-width:calc(100vw - 16px)}</style></head><body><div id="game">
 <header><span id="stage"></span><span id="bullets"></span></header>
 <div id="hint"></div><div id="enemy" class="pirate-character" aria-label="realistic pirate bastard">
 <svg viewBox="0 0 180 220"><defs><linearGradient id="coat" x1="0" x2="1"><stop offset="0"/><stop offset="1" stop-color="#28394a"/></linearGradient></defs>
@@ -104,14 +105,36 @@ function healthFor(s){return Math.min(3,1+Math.floor((s-1)/3))}
 function start(){
  shots=bulletsFor(stage);hp=maxhp=healthFor(stage);dead=false;
  let t=types[Math.min(stage-1,4)];$("stage").textContent="STAGE "+stage;
- $("enemy").style.opacity=1;$("enemy").style.transform="";
+ const enemy=$("enemy");
+ enemy.classList.remove("pirate-fall");
+ enemy.style.animation="none";
+ enemy.offsetHeight;
+ enemy.style.animation="";
+ enemy.style.opacity=1;
+ enemy.style.transform="";
  placeEnemy();$("hint").textContent="🎯 AIM AT THE BASTARD — DRAG, THEN FIRE 🖕😎";render()
 }
 function placeEnemy(){
- let x=innerWidth*(.68+Math.random()*.20),y=innerHeight*(.35+Math.random()*.22);
- $("enemy").style.left=x+"px";$("enemy").style.top=y+"px";
- $("hp").style.left=(x-5)+"px";$("hp").style.top=(y+90)+"px";
- $("hp").style.width=Math.min(170,innerWidth*.25)+"px"
+ const game=$("game"), enemy=$("enemy");
+ enemy.style.position="absolute";
+ enemy.style.right="auto";
+ enemy.style.bottom="auto";
+ const ew=Math.min(enemy.offsetWidth||145, game.clientWidth-24);
+ const eh=enemy.offsetHeight||178;
+ enemy.style.width=ew+"px";
+ enemy.style.maxWidth=(game.clientWidth-24)+"px";
+ const pad=18;
+ // Keep the pirate on the right side, but ALWAYS leave his whole body visible.
+ const x=Math.max(pad, game.clientWidth-ew-pad);
+ const y=Math.max(120, Math.min(game.clientHeight-eh-105, game.clientHeight*0.49-eh/2));
+ enemy.style.left=Math.round(x)+"px";
+ enemy.style.top=Math.round(y)+"px";
+ const hpWidth=Math.min(170, game.clientWidth-40);
+ const hpX=Math.max(8, Math.min(game.clientWidth-hpWidth-8, x+(ew-hpWidth)/2));
+ $("hp").style.position="absolute";
+ $("hp").style.left=Math.round(hpX)+"px";
+ $("hp").style.top=Math.round(Math.min(game.clientHeight-75,y+eh+7))+"px";
+ $("hp").style.width=Math.round(hpWidth)+"px";
 }
 function render(){$("bullets").textContent="🔫 ".repeat(shots);$("hp").firstElementChild.style.width=(hp/maxhp*100)+"%"}
 function aim(x,y){
@@ -208,4 +231,6 @@ $("again").onclick=restart;$("restart").onclick=restart;start();
 if("serviceWorker" in navigator){
   window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 }
+</script><script>
+window.addEventListener("resize",()=>setTimeout(placeEnemy,30));
 </script></body></html>
