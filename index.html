@@ -155,6 +155,23 @@ function pirateOwww(){
  const r=$("enemy").getBoundingClientRect(),s=document.createElement("div");s.className="speech";s.textContent="😵 OWWW!";
  s.style.left=Math.max(8,r.left+15)+"px";s.style.top=Math.max(80,r.top-55)+"px";$("game").appendChild(s);setTimeout(()=>s.remove(),1000)
 }
+
+function sayVoice(text, mood="pirate"){
+ try{
+  if(!("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="en-GB";
+  u.rate=mood==="shooter"?0.98:0.78;
+  u.pitch=mood==="shooter"?0.82:0.72;
+  u.volume=1;
+  const voices=speechSynthesis.getVoices();
+  const v=voices.find(x=>/^en-GB/i.test(x.lang))||voices.find(x=>/^en/i.test(x.lang));
+  if(v)u.voice=v;
+  speechSynthesis.speak(u);
+ }catch(e){}
+}
+
 function fireShot(){
  audioStart();if(audio?.state==="suspended")audio.resume();
  if(dead||shots<=0)return;
@@ -162,13 +179,15 @@ function fireShot(){
  let r=$("enemy").getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height*.48,
  d=Math.hypot(ax-cx,ay-cy),hit=d<105,head=d<45;render();
  if(hit){
+  sayVoice(head?"Fucking headshot!":"Owwww!","pirate");
   let damage=head?2:1;hp=Math.max(0,hp-damage);hitSfx(head);
   boom(head?"HEADSHOT! -2":"HIT! -1",cx,cy);
   $("hint").textContent=head?"💥 FUCKING HEADSHOT! 2 DAMAGE!":"🎯 FUCKING HIT! 1 DAMAGE!";
   $("enemy").style.transform="translateX(-12px) rotate(-5deg)";
   setTimeout(()=>$("enemy").style.transform="",120);
-  if(hp<=0){win();return}
+  if(hp<=0){sayVoice("Gotcha, fuck face!","shooter");win();return}
  }else{
+  sayVoice("Ha ha ha!","pirate");
   missSfx();
   const insults=[
    "💨 YOU FUCKING MISSED, YA TURNIP!",
