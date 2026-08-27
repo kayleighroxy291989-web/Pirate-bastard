@@ -144,16 +144,25 @@ header,.badge,#wind,#hint{
   filter:drop-shadow(0 8px 5px rgba(0,0,0,.78)) saturate(.82) contrast(1.16);
 }
 
-/* Pirate Bastard: talking mouth */
+/* Pirate Bastard: natural talking mouth */
 #pirate-mouth .mouth-open{opacity:0}
+#pirate-mouth .mouth-mid{opacity:0}
 #enemy.pirate-speaking #pirate-mouth .mouth-closed{opacity:0}
-#enemy.pirate-speaking #pirate-mouth .mouth-open{
+#enemy.pirate-speaking #pirate-mouth .mouth-open,
+#enemy.pirate-speaking #pirate-mouth .mouth-mid{
   opacity:1;
-  animation:pirateMouthTalk .18s steps(2,end) infinite alternate;
 }
-@keyframes pirateMouthTalk{
-  from{transform:scaleY(.55)}
-  to{transform:scaleY(1.08)}
+#enemy.pirate-speaking #pirate-mouth .mouth-mid{
+  animation:pirateMouthMid .22s steps(1,end) infinite;
+}
+#enemy.pirate-speaking #pirate-mouth .mouth-open{
+  animation:pirateMouthOpen .31s steps(1,end) infinite;
+}
+@keyframes pirateMouthMid{
+  0%,49%{opacity:1} 50%,100%{opacity:0}
+}
+@keyframes pirateMouthOpen{
+  0%,64%{opacity:0} 65%,100%{opacity:1}
 }
 </style></head><body><div id="game"><div class="ocean-glow"></div>
 <header><span id="stage"></span><span id="bullets"></span></header><div id="stats2">
@@ -209,6 +218,7 @@ header,.badge,#wind,#hint{
 
 <!-- animated mouth -->
 <g id="pirate-mouth">
+ <path class="mouth-mid" d="M75 130Q90 140 105 130Q102 141 90 142Q78 141 75 130Z" fill="#24120e" stroke="#0b0908" stroke-width="3"/>
  <path class="mouth-closed" d="M76 131Q90 137 104 131" fill="none" stroke="#0b0908" stroke-width="4" stroke-linecap="round"/>
  <path class="mouth-open" d="M74 128Q90 143 106 128Q103 146 90 147Q77 146 74 128Z" fill="#24120e" stroke="#0b0908" stroke-width="3"/>
  <path class="mouth-open" d="M79 130Q90 134 101 130L99 135Q90 138 81 135Z" fill="#eee4d4"/>
