@@ -143,6 +143,18 @@ header,.badge,#wind,#hint{
 #enemy.pirate-character svg,#player.archer-character svg{
   filter:drop-shadow(0 8px 5px rgba(0,0,0,.78)) saturate(.82) contrast(1.16);
 }
+
+/* Pirate Bastard: talking mouth */
+#pirate-mouth .mouth-open{opacity:0}
+#enemy.pirate-speaking #pirate-mouth .mouth-closed{opacity:0}
+#enemy.pirate-speaking #pirate-mouth .mouth-open{
+  opacity:1;
+  animation:pirateMouthTalk .18s steps(2,end) infinite alternate;
+}
+@keyframes pirateMouthTalk{
+  from{transform:scaleY(.55)}
+  to{transform:scaleY(1.08)}
+}
 </style></head><body><div id="game"><div class="ocean-glow"></div>
 <header><span id="stage"></span><span id="bullets"></span></header><div id="stats2">
 <span class="badge">🔥 COMBO <b id="combo">0</b></span>
@@ -152,38 +164,71 @@ header,.badge,#wind,#hint{
 <div id="hint"></div><div id="enemy" class="pirate-character" aria-label="realistic pirate bastard">
 <svg viewBox="0 0 180 220" aria-hidden="true">
 <defs>
- <radialGradient id="pSkin" cx="38%" cy="28%"><stop offset="0" stop-color="#f0c18c"/><stop offset=".7" stop-color="#c47d4e"/><stop offset="1" stop-color="#70402c"/></radialGradient>
- <linearGradient id="pCoat" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#10161d"/><stop offset=".5" stop-color="#263746"/><stop offset="1" stop-color="#080d12"/></linearGradient>
- <linearGradient id="pHat" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#25282b"/><stop offset=".55" stop-color="#080a0c"/><stop offset="1" stop-color="#000"/></linearGradient>
- <linearGradient id="pGold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0c968"/><stop offset=".5" stop-color="#9a6825"/><stop offset="1" stop-color="#4d2d10"/></linearGradient>
+ <radialGradient id="pSkin" cx="38%" cy="25%">
+  <stop offset="0" stop-color="#f1c08a"/><stop offset=".68" stop-color="#bf7749"/><stop offset="1" stop-color="#683b29"/>
+ </radialGradient>
+ <linearGradient id="pCoat" x1="0" y1="0" x2="1" y2="1">
+  <stop stop-color="#151b20"/><stop offset=".5" stop-color="#263746"/><stop offset="1" stop-color="#070b0f"/>
+ </linearGradient>
+ <linearGradient id="pHat" x1="0" y1="0" x2="1" y2="1">
+  <stop stop-color="#2b2a27"/><stop offset=".55" stop-color="#0b0b0b"/><stop offset="1" stop-color="#000"/>
+ </linearGradient>
+ <linearGradient id="pGold" x1="0" y1="0" x2="1" y2="1">
+  <stop stop-color="#f5d06c"/><stop offset=".5" stop-color="#a56d25"/><stop offset="1" stop-color="#4a2b0d"/>
+ </linearGradient>
 </defs>
-<ellipse cx="90" cy="207" rx="57" ry="10" fill="#0008"/>
-<!-- hat -->
-<path d="M34 57Q43 18 90 10Q137 18 146 57Q123 45 90 45T34 57Z" fill="url(#pHat)" stroke="#050607" stroke-width="5"/>
-<path d="M48 42Q90 25 132 42" fill="none" stroke="url(#pGold)" stroke-width="8"/>
-<circle cx="91" cy="31" r="4" fill="#f4d37b"/>
+<ellipse cx="90" cy="208" rx="59" ry="10" fill="#0009"/>
+
+<!-- unmistakably pirate: tricorn -->
+<path d="M29 57Q39 18 65 18Q90 2 115 18Q141 18 151 57Q125 47 90 49Q55 47 29 57Z"
+      fill="url(#pHat)" stroke="#050505" stroke-width="5"/>
+<path d="M47 42Q90 26 133 42" fill="none" stroke="url(#pGold)" stroke-width="8"/>
+<path d="M78 20Q90 11 102 20" fill="none" stroke="#111" stroke-width="9" stroke-linecap="round"/>
+<circle cx="128" cy="65" r="7" fill="url(#pGold)" stroke="#4d2d10" stroke-width="2"/>
+
 <!-- face -->
-<path d="M45 69Q47 38 90 37Q133 38 135 69L128 126Q116 151 90 154Q64 151 52 126Z" fill="url(#pSkin)" stroke="#24150f" stroke-width="5"/>
-<!-- ears -->
-<ellipse cx="46" cy="91" rx="8" ry="13" fill="#b86f48"/><ellipse cx="134" cy="91" rx="8" ry="13" fill="#b86f48"/>
-<!-- brows/eyes -->
-<path d="M57 78Q69 70 80 78M100 78Q112 70 123 78" fill="none" stroke="#3a2118" stroke-width="6" stroke-linecap="round"/>
-<ellipse cx="70" cy="87" rx="8" ry="5" fill="#eee9dd"/><ellipse cx="110" cy="87" rx="8" ry="5" fill="#eee9dd"/>
-<circle cx="71" cy="87" r="3" fill="#19130f"/><circle cx="109" cy="87" r="3" fill="#19130f"/>
-<!-- nose -->
-<path d="M90 87L84 104Q89 108 96 104" fill="none" stroke="#7e482f" stroke-width="4" stroke-linecap="round"/>
-<!-- beard/moustache -->
-<path d="M57 111Q69 105 82 111Q90 117 98 111Q111 105 123 111L117 136Q90 153 63 136Z" fill="#35271f"/>
-<path d="M62 113Q73 109 83 114M97 114Q107 109 118 113" fill="none" stroke="#171310" stroke-width="7" stroke-linecap="round"/>
-<path d="M76 130Q90 136 104 130" fill="none" stroke="#0d0b0a" stroke-width="4"/>
+<path d="M44 69Q47 39 90 37Q133 39 136 69L129 126Q117 151 90 154Q63 151 51 126Z"
+      fill="url(#pSkin)" stroke="#24150f" stroke-width="5"/>
+<ellipse cx="45" cy="91" rx="8" ry="13" fill="#b86f48"/>
+<ellipse cx="135" cy="91" rx="8" ry="13" fill="#b86f48"/>
+
+<!-- eye patch -->
+<path d="M50 76Q67 63 83 75L81 98Q65 106 51 95Z" fill="#111" stroke="#050505" stroke-width="3"/>
+<path d="M82 76Q69 59 57 48" stroke="#171717" stroke-width="3" fill="none"/>
+<path d="M98 78Q111 69 124 78" fill="none" stroke="#3a2118" stroke-width="6" stroke-linecap="round"/>
+<ellipse cx="111" cy="88" rx="8" ry="5" fill="#eee9dd"/>
+<circle cx="110" cy="88" r="3" fill="#17120f"/>
+
+<!-- nose + scar -->
+<path d="M91 86L85 105Q90 109 97 104" fill="none" stroke="#7d472f" stroke-width="4" stroke-linecap="round"/>
+<path d="M121 92l9 6M119 98l11 4M121 104l8 4" stroke="#6c3827" stroke-width="3" stroke-linecap="round"/>
+
+<!-- beard + moustache -->
+<path d="M55 111Q69 104 82 111Q90 117 98 111Q112 104 125 112L118 139Q90 156 62 139Z" fill="#34271f"/>
+<path d="M61 114Q72 108 83 114M97 114Q108 108 119 114" fill="none" stroke="#151210" stroke-width="7" stroke-linecap="round"/>
+
+<!-- animated mouth -->
+<g id="pirate-mouth">
+ <path class="mouth-closed" d="M76 131Q90 137 104 131" fill="none" stroke="#0b0908" stroke-width="4" stroke-linecap="round"/>
+ <path class="mouth-open" d="M74 128Q90 143 106 128Q103 146 90 147Q77 146 74 128Z" fill="#24120e" stroke="#0b0908" stroke-width="3"/>
+ <path class="mouth-open" d="M79 130Q90 134 101 130L99 135Q90 138 81 135Z" fill="#eee4d4"/>
+</g>
+
 <!-- coat -->
-<path d="M46 136Q90 151 134 136L146 195Q90 213 34 195Z" fill="url(#pCoat)" stroke="#080b0f" stroke-width="6"/>
-<path d="M56 148Q90 160 124 148" fill="none" stroke="url(#pGold)" stroke-width="7"/>
+<path d="M45 137Q90 151 135 137L147 195Q90 214 33 195Z" fill="url(#pCoat)" stroke="#080b0f" stroke-width="6"/>
+<path d="M54 148Q90 160 126 148" fill="none" stroke="url(#pGold)" stroke-width="7"/>
 <path d="M88 151V198M92 151V198" stroke="#0b1015" stroke-width="3"/>
+
 <!-- arms -->
-<path d="M48 145L20 181M132 145L160 181" stroke="#bd754b" stroke-width="15" stroke-linecap="round"/>
-<path d="M20 181l-6 17M160 181l6 17" stroke="#8c5138" stroke-width="7" stroke-linecap="round"/>
-<!-- trousers/boots -->
+<path d="M47 145L19 181M133 145L158 178" stroke="#bd754b" stroke-width="15" stroke-linecap="round"/>
+<path d="M19 181l-6 17M158 178l7 18" stroke="#8c5138" stroke-width="7" stroke-linecap="round"/>
+
+<!-- cutlass at his side -->
+<path d="M144 166Q162 150 169 130" fill="none" stroke="#d7d9d6" stroke-width="6" stroke-linecap="round"/>
+<path d="M141 169Q153 174 161 181" fill="none" stroke="#a26b2c" stroke-width="5" stroke-linecap="round"/>
+<path d="M157 181l-7 9" stroke="#3a2412" stroke-width="7" stroke-linecap="round"/>
+
+<!-- boots -->
 <path d="M49 193L38 214M131 193L142 214" stroke="#18222c" stroke-width="18" stroke-linecap="round"/>
 <path d="M30 216h31M119 216h31" stroke="#080b0e" stroke-width="10" stroke-linecap="round"/>
 </svg></div><div id="hp"><i class="hpfill"></i></div>
@@ -258,8 +303,13 @@ Object.values(pirateAudio).forEach(a=>{a.preload="auto";a.volume=1;});
 function playPirateAudio(which){
  try{
   const a=pirateAudio[which];if(!a)return;
+  const enemyEl=$("enemy");
+  if(enemyEl)enemyEl.classList.add("pirate-speaking");
+  a.onended=()=>{if(enemyEl)enemyEl.classList.remove("pirate-speaking")};
   a.currentTime=0;
-  const p=a.play();if(p&&p.catch)p.catch(()=>{});
+  const p=a.play();
+  if(p&&p.catch)p.catch(()=>{if(enemyEl)enemyEl.classList.remove("pirate-speaking")});
+  setTimeout(()=>{if(enemyEl&&!a.paused)enemyEl.classList.add("pirate-speaking")},80);
  }catch(e){}
 }
 
