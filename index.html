@@ -7,28 +7,205 @@
 header{position:absolute;z-index:10;top:0;left:0;right:0;padding:11px 15px;background:#04131ee8;display:flex;justify-content:space-between;font-weight:1000;font-size:19px}
 #hint{position:absolute;z-index:8;top:13%;left:50%;transform:translateX(-50%);background:#061522dd;padding:9px 14px;border-radius:14px;font-weight:900;text-align:center;max-width:88%}
 #enemy{position:absolute;z-index:3;font-size:82px;transition:transform .12s,opacity .25s}
-#hp{position:absolute;z-index:4;height:15px;background:#251414;border:2px solid #f6df9d;border-radius:10px}.hpfill{display:block;height:100%;background:#e9443c}
+#hp{position:absolute;z-index:4;height:15px;background:#251414;border:2px solid #f6df9d;border-radius:10px;overflow:hidden}.hpfill{display:block;height:100%;background:#e9443c;transition:width .15s}
 #player{position:absolute;left:11%;bottom:18%;font-size:88px;z-index:4}#gun{position:absolute;left:24%;bottom:27%;font-size:46px;z-index:7;transform-origin:left center}
 #cross{position:absolute;z-index:20;width:55px;height:55px;border:3px solid white;border-radius:50%;display:none;transform:translate(-50%,-50%);box-shadow:0 0 0 2px #0008}
 #cross:before,#cross:after{content:"";position:absolute;background:white}.cross:before{left:50%;top:0;bottom:0;width:2px}.cross:after{top:50%;left:0;right:0;height:2px}
 #fire{position:absolute;z-index:25;right:6%;bottom:7%;width:95px;height:95px;border-radius:50%;background:#bd3025;color:white;font-weight:1000;font-size:17px;border:4px solid #f6dfa0;box-shadow:0 7px #65180f}
-#o{display:none;position:fixed;inset:0;z-index:50;background:#000b;align-items:center;justify-content:center;padding:20px}.modal{background:#123b4b;border:2px solid #c08a2d;border-radius:24px;padding:28px;text-align:center;width:min(500px,100%)}.modal button{padding:14px 25px;font-weight:1000;border:0;border-radius:12px;background:#f2c34f}
+#restart{position:absolute;z-index:25;left:5%;bottom:7%;padding:13px 18px;background:#f6dfa0;color:#18232a;font-weight:1000;font-size:16px;border:0;border-radius:12px;box-shadow:0 5px #927d54}
+#restart:active,#fire:active{transform:translateY(4px);box-shadow:0 3px #65180f}
+#o{display:none;position:fixed;inset:0;z-index:50;background:#000b;align-items:center;justify-content:center;padding:20px}
+.modal{background:#123b4b;border:2px solid #c08a2d;border-radius:24px;padding:28px;text-align:center;width:min(500px,100%)}
+.modal button{padding:14px 25px;font-weight:1000;border:0;border-radius:12px;background:#f2c34f;margin:4px}
+.boom{position:absolute;pointer-events:none;font-size:52px;z-index:30;animation:boom .5s ease-out forwards}
+.float{position:absolute;pointer-events:none;z-index:31;font-weight:1000;font-size:24px;text-shadow:0 3px #000;animation:float .75s ease-out forwards}
+@keyframes boom{0%{transform:scale(.5);opacity:1}100%{transform:scale(1.8);opacity:0}}
+@keyframes float{0%{transform:translateY(0) scale(.8);opacity:1}100%{transform:translateY(-65px) scale(1.1);opacity:0}}
 @media(max-width:600px){#enemy{font-size:70px}#player{font-size:72px}#gun{font-size:38px}}
-</style></head><body><div id="game"><header><span id="stage"></span><span id="bullets"></span></header><div id="hint"></div><div id="enemy">🏴‍☠️</div><div id="hp"><i class="hpfill"></i></div><div id="player">🏴‍☠️</div><div id="gun">🔫</div><div id="cross"></div><button id="fire">FIRE<br>💥</button></div>
-<div id="o"><div class="modal"><h1 id="title"></h1><p id="text"></p><button id="next"></button></div></div>
+#enemy{width:150px;height:150px}#enemy svg{width:100%;height:100%;filter:drop-shadow(0 5px 2px #0007)}
+#player{width:210px;height:220px}#player svg{width:100%;height:100%;filter:drop-shadow(0 5px 2px #0007)}
+@media(max-width:600px){#enemy{width:120px;height:120px}#player{width:170px;height:185px}}#cross:before{left:50%;top:0;bottom:0;width:2px}#cross:after{top:50%;left:0;right:0;height:2px}
+#gun{display:none}
+#game{background:linear-gradient(#75cbe2 0 48%,#247d95 48% 64%,#5a351d 64%)}
+#game:after{content:"";position:absolute;inset:64% 0 0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 36px,#321c10 37px 40px),linear-gradient(90deg,transparent 0 10%,#0002 10% 11%,transparent 11% 29%,#0002 29% 30%,transparent 30% 56%,#0002 56% 57%,transparent 57% 81%,#0002 81% 82%,transparent 82%);opacity:.3;z-index:2}
+#enemy svg,#player svg{filter:drop-shadow(0 8px 4px #000a) saturate(.86) contrast(1.12)}
+#enemy:before{content:"";position:absolute;inset:-15px;background:radial-gradient(circle,#fff2,transparent 60%);pointer-events:none}
+#enemy.pirate-character{width:180px;height:220px;font-size:0;transform-origin:50% 100%}
+#player.archer-character{width:230px;height:250px;font-size:0}
+.pirate-character svg,.archer-character svg{width:100%;height:100%;filter:drop-shadow(0 6px 3px #0008)}
+@keyframes pirateFall{0%{transform:rotate(0) translateY(0);opacity:1}55%{transform:rotate(18deg) translateY(12px)}100%{transform:rotate(88deg) translateY(55px);opacity:0}}
+#enemy.pirate-fall{animation:pirateFall .7s ease-in forwards}
+.speech{position:absolute;z-index:45;background:#fff;color:#171717;border:3px solid #171717;border-radius:18px;padding:9px 13px;font-weight:1000;font-size:18px;box-shadow:0 4px 0 #0008;animation:speechPop .8s ease-out forwards;pointer-events:none}
+@keyframes speechPop{0%{transform:scale(.4);opacity:0}15%{transform:scale(1.08);opacity:1}75%{opacity:1}100%{transform:translateY(-20px);opacity:0}}
+@media(max-width:600px){#enemy.pirate-character{width:145px;height:178px}#player.archer-character{width:175px;height:190px}.speech{font-size:15px}}
+</style></head><body><div id="game">
+<header><span id="stage"></span><span id="bullets"></span></header>
+<div id="hint"></div><div id="enemy" class="pirate-character" aria-label="realistic pirate bastard">
+<svg viewBox="0 0 180 220"><defs><linearGradient id="coat" x1="0" x2="1"><stop offset="0"/><stop offset="1" stop-color="#28394a"/></linearGradient></defs>
+<ellipse cx="90" cy="205" rx="54" ry="9" fill="#0005"/>
+<path d="M48 93Q45 52 90 37Q135 52 132 93L125 132Q116 151 90 151T55 132z" fill="#d8a06a" stroke="#201713" stroke-width="6"/>
+<path d="M39 59Q90 12 141 59L134 39Q90 1 46 39z" fill="#171a1e" stroke="#0c0c0c" stroke-width="6"/>
+<path d="M51 45Q90 25 129 45" fill="none" stroke="#bd8d36" stroke-width="8"/>
+<path d="M53 81q15-11 29 0M98 81q14-11 29 0" fill="none" stroke="#161616" stroke-width="7"/>
+<circle cx="69" cy="85" r="7" fill="#fff"/><circle cx="111" cy="85" r="7" fill="#fff"/>
+<path d="M83 99q7 5 14 0" fill="none" stroke="#5d281e" stroke-width="5"/>
+<path d="M59 112q31 17 62 0" fill="none" stroke="#241716" stroke-width="8"/>
+<path d="M77 129l13 12 13-12" fill="#fff"/>
+<path d="M45 133Q90 157 135 133L142 191Q90 210 38 191z" fill="url(#coat)" stroke="#161c23" stroke-width="6"/>
+<path d="M59 154h62" stroke="#b58a48" stroke-width="7"/>
+<path d="M46 150L20 181M134 150l28 31" stroke="#d8a06a" stroke-width="14" stroke-linecap="round"/>
+<path d="M37 190l-12 25M143 190l12 25" stroke="#202833" stroke-width="18" stroke-linecap="round"/>
+<path d="M26 216h34M130 216h34" stroke="#111820" stroke-width="10" stroke-linecap="round"/></svg></div><div id="hp"><i class="hpfill"></i></div>
+<div id="player" class="archer-character" aria-label="realistic sharpshooter bastard">
+<svg viewBox="0 0 230 250"><ellipse cx="113" cy="238" rx="68" ry="10" fill="#0005"/>
+<path d="M72 76Q68 39 113 31Q158 39 154 76L148 117Q139 138 113 138T78 117z" fill="#d8a06a" stroke="#201713" stroke-width="6"/>
+<path d="M61 56Q113 9 165 56L158 36Q113 0 68 36z" fill="#314b35" stroke="#0d1610" stroke-width="6"/>
+<path d="M74 39Q113 20 152 39" fill="none" stroke="#c79a43" stroke-width="8"/>
+<path d="M77 83h27M123 83h27" stroke="#181818" stroke-width="7"/><circle cx="91" cy="86" r="7" fill="#fff"/><circle cx="137" cy="86" r="7" fill="#fff"/>
+<path d="M101 105q12 7 24 0" fill="none" stroke="#5d281e" stroke-width="5"/>
+<path d="M62 118Q113 151 164 118L169 211Q113 230 57 211z" fill="#31536e" stroke="#141c24" stroke-width="6"/>
+<path d="M76 146L35 108M151 146l37-37" stroke="#d8a06a" stroke-width="15" stroke-linecap="round"/>
+<path d="M30 102Q74 52 190 113" fill="none" stroke="#7b4326" stroke-width="8"/>
+<path d="M32 102Q77 56 189 113" fill="none" stroke="#e8d6a7" stroke-width="3"/>
+<path d="M33 102l-7-19M189 113l12-18" stroke="#e8d6a7" stroke-width="3"/>
+<path d="M58 210l-10 34M152 210l10 34" stroke="#28303a" stroke-width="17" stroke-linecap="round"/>
+<path d="M42 244h35M148 244h35" stroke="#151b21" stroke-width="11" stroke-linecap="round"/></svg></div><div id="cross"></div>
+<button id="restart">🔄 RESTART</button><button id="fire">FIRE<br>💥</button></div>
+<div id="o"><div class="modal"><h1 id="title"></h1><p id="text"></p><button id="next"></button><button id="again">🔄 RESTART</button></div></div>
+
 <script>
 const types=[["DECKHAND","🏴‍☠️"],["GUNNER","💀"],["BRUTE","👹"],["BOMBER","💣"],["CAPTAIN GOBLIN","👺"]];
-let save=JSON.parse(localStorage.getItem("pirateSharpshooterSave")||"null"),stage=save?.stage||1,gold=save?.gold||0,shots=0,hp=0,maxhp=0,dead=false,ax=innerWidth*.78,ay=innerHeight*.45,drag=false;
+let save=JSON.parse(localStorage.getItem("pirateSharpshooterSave")||"null"),
+stage=save?.stage||1,gold=save?.gold||0,shots=0,hp=0,maxhp=0,dead=false,
+ax=innerWidth*.78,ay=innerHeight*.45,drag=false,audio=null;
 const $=x=>document.getElementById(x);
+
+function audioStart(){if(audio)return;try{audio=new(window.AudioContext||window.webkitAudioContext)()}catch(e){audio=null}}
+function tone(f,d,type="sine",gain=.06,slide=0){
+ if(!audio)return;let o=audio.createOscillator(),g=audio.createGain(),t=audio.currentTime;
+ o.type=type;o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),t+d);
+ g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(gain,t+.008);
+ g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(audio.destination);o.start(t);o.stop(t+d+.02)
+}
+function noise(d=.1,gain=.04){
+ if(!audio)return;let b=audio.createBuffer(1,audio.sampleRate*d,audio.sampleRate),a=b.getChannelData(0);
+ for(let i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*(1-i/a.length);
+ let s=audio.createBufferSource(),g=audio.createGain(),t=audio.currentTime;s.buffer=b;
+ g.gain.setValueAtTime(gain,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(g).connect(audio.destination);s.start()
+}
+function fireSfx(){tone(220,.08,"triangle",.08,260);noise(.05,.02)}
+function hitSfx(head){tone(head?430:150,.11,"square",.08,head?180:-30);if(head)tone(760,.15,"triangle",.05,-180)}
+function missSfx(){tone(80,.08,"square",.04,-20)}
+function deleteSfx(){tone(90,.3,"sawtooth",.11,500);setTimeout(()=>tone(460,.38,"triangle",.09,400),90);setTimeout(()=>noise(.3,.07),120)}
+function stageSfx(){tone(440,.12,"triangle",.07,100);setTimeout(()=>tone(660,.14,"triangle",.07,140),120);setTimeout(()=>tone(880,.18,"triangle",.08,80),250)}
+
 function bulletsFor(s){return Math.min(8,5+Math.floor((s-1)/3))}
 function healthFor(s){return Math.min(3,1+Math.floor((s-1)/3))}
-function start(){shots=bulletsFor(stage);hp=maxhp=healthFor(stage);dead=false;let t=types[Math.min(stage-1,4)];$("stage").textContent="STAGE "+stage;$("enemy").textContent=t[1];$("enemy").style.opacity=1;placeEnemy();$("hint").textContent="🎯 AIM AT THE BASTARD — DRAG, THEN FIRE 🖕😎";render()}
-function placeEnemy(){let x=innerWidth*(.68+Math.random()*.20),y=innerHeight*(.35+Math.random()*.22);$("enemy").style.left=x+"px";$("enemy").style.top=y+"px";$("hp").style.left=(x-5)+"px";$("hp").style.top=(y+90)+"px";$("hp").style.width=Math.min(170,innerWidth*.25)+"px"}
+function start(){
+ shots=bulletsFor(stage);hp=maxhp=healthFor(stage);dead=false;
+ let t=types[Math.min(stage-1,4)];$("stage").textContent="STAGE "+stage;
+ $("enemy").style.opacity=1;$("enemy").style.transform="";
+ placeEnemy();$("hint").textContent="🎯 AIM AT THE BASTARD — DRAG, THEN FIRE 🖕😎";render()
+}
+function placeEnemy(){
+ let x=innerWidth*(.68+Math.random()*.20),y=innerHeight*(.35+Math.random()*.22);
+ $("enemy").style.left=x+"px";$("enemy").style.top=y+"px";
+ $("hp").style.left=(x-5)+"px";$("hp").style.top=(y+90)+"px";
+ $("hp").style.width=Math.min(170,innerWidth*.25)+"px"
+}
 function render(){$("bullets").textContent="🔫 ".repeat(shots);$("hp").firstElementChild.style.width=(hp/maxhp*100)+"%"}
-function aim(x,y){ax=x;ay=y;$("cross").style.left=x+"px";$("cross").style.top=y+"px";$("cross").style.display="block";let a=Math.atan2(y-innerHeight*.72,x-innerWidth*.25)*180/Math.PI;$("gun").style.transform="rotate("+a+"deg)"}
-function fireShot(){if(dead||shots<=0)return;shots--;let r=$("enemy").getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height*.48,d=Math.hypot(ax-cx,ay-cy),hit=d<105,head=d<45;render();if(hit){let damage=head?2:1;hp=Math.max(0,hp-damage);$("hint").textContent=head?"💥 HEADSHOT! 2 DAMAGE!":"🎯 FUCKING HIT! 1 DAMAGE!";$("enemy").style.transform="translateX(-12px)";setTimeout(()=>$("enemy").style.transform="",100);if(hp<=0){win();return}}else $("hint").textContent="💨 MISSED! You fucking turnip.";if(shots===0&&hp>0)lose()}
-function win(){dead=true;$("enemy").style.opacity=0;gold+=50*stage;localStorage.setItem("pirateSharpshooterSave",JSON.stringify({stage:stage+1,gold}));$("title").textContent="🏆 FUCKING VICTORY";$("text").textContent="Bastard eliminated. +"+50*stage+" gold. Stage "+(stage+1)+" unlocked.";$("next").textContent="NEXT STAGE 😎";$("o").style.display="flex"}
-function lose(){dead=true;$("title").textContent="☠️ DEFEAT";$("text").textContent="Out of bullets. Your progress is safe — have another fucking go.";$("next").textContent="TRY AGAIN 🔫";$("o").style.display="flex"}
-addEventListener("pointerdown",e=>{if(e.target.id==="fire"){fireShot();return}drag=true;aim(e.clientX,e.clientY)});addEventListener("pointermove",e=>{if(drag)aim(e.clientX,e.clientY)});addEventListener("pointerup",()=>drag=false);
-$("next").onclick=()=>{$("o").style.display="none";if($("next").textContent.startsWith("NEXT"))stage++;start()};start();
+function aim(x,y){
+ ax=x;ay=y;$("cross").style.left=x+"px";$("cross").style.top=y+"px";$("cross").style.display="block";
+ let a=Math.atan2(y-innerHeight*.72,x-innerWidth*.25)*180/Math.PI;$("gun").style.transform="rotate("+a+"deg)"
+}
+function boom(text,x,y){
+ let q=document.createElement("div");q.className="boom";q.textContent="💥";q.style.left=x+"px";q.style.top=y+"px";$("game").appendChild(q);
+ let f=document.createElement("div");f.className="float";f.textContent=text;f.style.left=(x-35)+"px";f.style.top=(y-25)+"px";$("game").appendChild(f);
+ setTimeout(()=>{q.remove();f.remove()},800)
+}
+function pirateLaugh(){
+ const laughs=["🤣 HAHAHA!","🏴‍☠️ HAHAHA!","😂 HAHAHA, YA MELT!","🤣 HAHAHA! NICE AIM!"];
+ const r=$("enemy").getBoundingClientRect(),s=document.createElement("div");s.className="speech";s.textContent=laughs[Math.floor(Math.random()*laughs.length)];
+ s.style.left=Math.max(8,r.left-10)+"px";s.style.top=Math.max(80,r.top-55)+"px";$("game").appendChild(s);setTimeout(()=>s.remove(),850)
+}
+function pirateOwww(){
+ const r=$("enemy").getBoundingClientRect(),s=document.createElement("div");s.className="speech";s.textContent="😵 OWWW!";
+ s.style.left=Math.max(8,r.left+15)+"px";s.style.top=Math.max(80,r.top-55)+"px";$("game").appendChild(s);setTimeout(()=>s.remove(),1000)
+}
+function fireShot(){
+ audioStart();if(audio?.state==="suspended")audio.resume();
+ if(dead||shots<=0)return;
+ shots--;fireSfx();
+ let r=$("enemy").getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height*.48,
+ d=Math.hypot(ax-cx,ay-cy),hit=d<105,head=d<45;render();
+ if(hit){
+  let damage=head?2:1;hp=Math.max(0,hp-damage);hitSfx(head);
+  boom(head?"HEADSHOT! -2":"HIT! -1",cx,cy);
+  $("hint").textContent=head?"💥 FUCKING HEADSHOT! 2 DAMAGE!":"🎯 FUCKING HIT! 1 DAMAGE!";
+  $("enemy").style.transform="translateX(-12px) rotate(-5deg)";
+  setTimeout(()=>$("enemy").style.transform="",120);
+  if(hp<=0){win();return}
+ }else{
+  missSfx();
+  const insults=[
+   "💨 YOU FUCKING MISSED, YA TURNIP!",
+   "💨 YOU FUCKING MISSED, YA MELT!",
+   "💨 YOU FUCKING MISSED, YA IDIOT!",
+   "💨 YOU FUCKING MISSED, YA POTATO!",
+   "💨 NICE SHOT, YA FUCKING WALNUT!",
+   "💨 NOT EVEN CLOSE, YA BELLEND!",
+   "💨 FUCKING SWING AND A MISS, YA DOUGHNUT!",
+   "💨 WHAT THE ACTUAL FUCK?!",
+   "💨 WHERE THE FUCK WAS THAT GOING, YA PLONKER!",
+   "💨 YOU COULDN'T HIT A BARN DOOR, YA TURNIP!",
+   "💨 AIM, YA FUCKING POTATO!",
+   "💨 TRY ACTUALLY HITTING THE BASTARD NEXT TIME!"
+  ];
+  $("hint").textContent=insults[Math.floor(Math.random()*insults.length)];
+  pirateLaugh();
+ }
+ if(shots===0&&hp>0)lose()
+}
+function win(){
+ dead=true;
+ pirateOwww();
+ $("enemy").classList.add("pirate-fall");
+ setTimeout(()=>{$("enemy").style.opacity=0},650);
+ gold+=50*stage;
+ localStorage.setItem("pirateSharpshooterSave",JSON.stringify({stage:stage+1,gold}));
+ $("hint").textContent="🏴‍☠️ PIRATE FUCKING DELETED";
+ setTimeout(()=>{
+  $("title").textContent="🏴‍☠️ PIRATE FUCKING DELETED";
+  $("text").textContent="Stage "+stage+" destroyed. +"+50*stage+" gold. Stage "+(stage+1)+" unlocked.";
+  $("next").textContent="NEXT STAGE 😈";$("o").style.display="flex"
+ },700)
+}
+function lose(){
+ dead=true;$("title").textContent="☠️ DEFEAT";
+ $("text").textContent="Out of bullets. Your progress is safe — have another fucking go.";
+ $("next").textContent="TRY AGAIN 🔫";$("o").style.display="flex"
+}
+function restart(){
+ stage=1;gold=0;localStorage.setItem("pirateSharpshooterSave",JSON.stringify({stage:1,gold:0}));
+ $("o").style.display="none";start();$("hint").textContent="🔄 FUCKING RESTARTED — STAGE 1"
+}
+addEventListener("pointerdown",e=>{
+ audioStart();if(audio?.state==="suspended")audio.resume();
+ if(e.target.id==="fire"){fireShot();return}
+ if(e.target.id==="restart"||e.target.id==="again"||e.target.id==="next")return;
+ drag=true;aim(e.clientX,e.clientY)
+});
+addEventListener("pointermove",e=>{if(drag)aim(e.clientX,e.clientY)});
+addEventListener("pointerup",()=>drag=false);
+$("next").onclick=()=>{
+ if($("next").textContent.startsWith("NEXT")){
+  stage++;localStorage.setItem("pirateSharpshooterSave",JSON.stringify({stage,gold}));
+  $("o").style.display="none";stageSfx();start()
+ }else{$("o").style.display="none";start()}
+};
+$("again").onclick=restart;$("restart").onclick=restart;start();
+</script><script>
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+}
 </script></body></html>

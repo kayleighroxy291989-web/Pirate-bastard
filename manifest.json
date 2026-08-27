@@ -1,9 +1,19 @@
 {
-  "name": "Kayleigh's Sharpshooter Bastard",
-  "short_name": "Sharpshooter Bastard",
+  "name": "Pirate Bastard \u2014 Sharpshooter",
+  "short_name": "Pirate Bastard",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "orientation": "landscape",
+  "orientation": "portrait",
+  "background_color": "#071523",
   "theme_color": "#071523",
-  "background_color": "#071523"
+  "description": "Kayleigh's Pirate Bastard Sharpshooter game.",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
