@@ -135,6 +135,14 @@ header,.badge,#wind,#hint{
   background:repeating-linear-gradient(0deg,transparent 0 11px,rgba(177,229,236,.13) 12px 14px);
   animation:oceanShimmer 7s ease-in-out infinite;
 }
+
+/* Character realism pass */
+#enemy.pirate-character,#player.archer-character{
+  filter:drop-shadow(0 16px 10px rgba(0,0,0,.58));
+}
+#enemy.pirate-character svg,#player.archer-character svg{
+  filter:drop-shadow(0 8px 5px rgba(0,0,0,.78)) saturate(.82) contrast(1.16);
+}
 </style></head><body><div id="game"><div class="ocean-glow"></div>
 <header><span id="stage"></span><span id="bullets"></span></header><div id="stats2">
 <span class="badge">🔥 COMBO <b id="combo">0</b></span>
@@ -142,35 +150,79 @@ header,.badge,#wind,#hint{
 <span class="badge">🏆 BEST <b id="best">0</b></span>
 </div><div id="wind">🌬️ WIND <b id="windv">0</b></div>
 <div id="hint"></div><div id="enemy" class="pirate-character" aria-label="realistic pirate bastard">
-<svg viewBox="0 0 180 220"><defs><linearGradient id="coat" x1="0" x2="1"><stop offset="0"/><stop offset="1" stop-color="#28394a"/></linearGradient></defs>
-<ellipse cx="90" cy="205" rx="54" ry="9" fill="#0005"/>
-<path d="M48 93Q45 52 90 37Q135 52 132 93L125 132Q116 151 90 151T55 132z" fill="#d8a06a" stroke="#201713" stroke-width="6"/>
-<path d="M39 59Q90 12 141 59L134 39Q90 1 46 39z" fill="#171a1e" stroke="#0c0c0c" stroke-width="6"/>
-<path d="M51 45Q90 25 129 45" fill="none" stroke="#bd8d36" stroke-width="8"/>
-<path d="M53 81q15-11 29 0M98 81q14-11 29 0" fill="none" stroke="#161616" stroke-width="7"/>
-<circle cx="69" cy="85" r="7" fill="#fff"/><circle cx="111" cy="85" r="7" fill="#fff"/>
-<path d="M83 99q7 5 14 0" fill="none" stroke="#5d281e" stroke-width="5"/>
-<path d="M59 112q31 17 62 0" fill="none" stroke="#241716" stroke-width="8"/>
-<path d="M77 129l13 12 13-12" fill="#fff"/>
-<path d="M45 133Q90 157 135 133L142 191Q90 210 38 191z" fill="url(#coat)" stroke="#161c23" stroke-width="6"/>
-<path d="M59 154h62" stroke="#b58a48" stroke-width="7"/>
-<path d="M46 150L20 181M134 150l28 31" stroke="#d8a06a" stroke-width="14" stroke-linecap="round"/>
-<path d="M37 190l-12 25M143 190l12 25" stroke="#202833" stroke-width="18" stroke-linecap="round"/>
-<path d="M26 216h34M130 216h34" stroke="#111820" stroke-width="10" stroke-linecap="round"/></svg></div><div id="hp"><i class="hpfill"></i></div>
+<svg viewBox="0 0 180 220" aria-hidden="true">
+<defs>
+ <radialGradient id="pSkin" cx="38%" cy="28%"><stop offset="0" stop-color="#f0c18c"/><stop offset=".7" stop-color="#c47d4e"/><stop offset="1" stop-color="#70402c"/></radialGradient>
+ <linearGradient id="pCoat" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#10161d"/><stop offset=".5" stop-color="#263746"/><stop offset="1" stop-color="#080d12"/></linearGradient>
+ <linearGradient id="pHat" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#25282b"/><stop offset=".55" stop-color="#080a0c"/><stop offset="1" stop-color="#000"/></linearGradient>
+ <linearGradient id="pGold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0c968"/><stop offset=".5" stop-color="#9a6825"/><stop offset="1" stop-color="#4d2d10"/></linearGradient>
+</defs>
+<ellipse cx="90" cy="207" rx="57" ry="10" fill="#0008"/>
+<!-- hat -->
+<path d="M34 57Q43 18 90 10Q137 18 146 57Q123 45 90 45T34 57Z" fill="url(#pHat)" stroke="#050607" stroke-width="5"/>
+<path d="M48 42Q90 25 132 42" fill="none" stroke="url(#pGold)" stroke-width="8"/>
+<circle cx="91" cy="31" r="4" fill="#f4d37b"/>
+<!-- face -->
+<path d="M45 69Q47 38 90 37Q133 38 135 69L128 126Q116 151 90 154Q64 151 52 126Z" fill="url(#pSkin)" stroke="#24150f" stroke-width="5"/>
+<!-- ears -->
+<ellipse cx="46" cy="91" rx="8" ry="13" fill="#b86f48"/><ellipse cx="134" cy="91" rx="8" ry="13" fill="#b86f48"/>
+<!-- brows/eyes -->
+<path d="M57 78Q69 70 80 78M100 78Q112 70 123 78" fill="none" stroke="#3a2118" stroke-width="6" stroke-linecap="round"/>
+<ellipse cx="70" cy="87" rx="8" ry="5" fill="#eee9dd"/><ellipse cx="110" cy="87" rx="8" ry="5" fill="#eee9dd"/>
+<circle cx="71" cy="87" r="3" fill="#19130f"/><circle cx="109" cy="87" r="3" fill="#19130f"/>
+<!-- nose -->
+<path d="M90 87L84 104Q89 108 96 104" fill="none" stroke="#7e482f" stroke-width="4" stroke-linecap="round"/>
+<!-- beard/moustache -->
+<path d="M57 111Q69 105 82 111Q90 117 98 111Q111 105 123 111L117 136Q90 153 63 136Z" fill="#35271f"/>
+<path d="M62 113Q73 109 83 114M97 114Q107 109 118 113" fill="none" stroke="#171310" stroke-width="7" stroke-linecap="round"/>
+<path d="M76 130Q90 136 104 130" fill="none" stroke="#0d0b0a" stroke-width="4"/>
+<!-- coat -->
+<path d="M46 136Q90 151 134 136L146 195Q90 213 34 195Z" fill="url(#pCoat)" stroke="#080b0f" stroke-width="6"/>
+<path d="M56 148Q90 160 124 148" fill="none" stroke="url(#pGold)" stroke-width="7"/>
+<path d="M88 151V198M92 151V198" stroke="#0b1015" stroke-width="3"/>
+<!-- arms -->
+<path d="M48 145L20 181M132 145L160 181" stroke="#bd754b" stroke-width="15" stroke-linecap="round"/>
+<path d="M20 181l-6 17M160 181l6 17" stroke="#8c5138" stroke-width="7" stroke-linecap="round"/>
+<!-- trousers/boots -->
+<path d="M49 193L38 214M131 193L142 214" stroke="#18222c" stroke-width="18" stroke-linecap="round"/>
+<path d="M30 216h31M119 216h31" stroke="#080b0e" stroke-width="10" stroke-linecap="round"/>
+</svg></div><div id="hp"><i class="hpfill"></i></div>
 <div id="player" class="archer-character" aria-label="realistic sharpshooter bastard">
-<svg viewBox="0 0 230 250"><ellipse cx="113" cy="238" rx="68" ry="10" fill="#0005"/>
-<path d="M72 76Q68 39 113 31Q158 39 154 76L148 117Q139 138 113 138T78 117z" fill="#d8a06a" stroke="#201713" stroke-width="6"/>
-<path d="M61 56Q113 9 165 56L158 36Q113 0 68 36z" fill="#314b35" stroke="#0d1610" stroke-width="6"/>
-<path d="M74 39Q113 20 152 39" fill="none" stroke="#c79a43" stroke-width="8"/>
-<path d="M77 83h27M123 83h27" stroke="#181818" stroke-width="7"/><circle cx="91" cy="86" r="7" fill="#fff"/><circle cx="137" cy="86" r="7" fill="#fff"/>
-<path d="M101 105q12 7 24 0" fill="none" stroke="#5d281e" stroke-width="5"/>
-<path d="M62 118Q113 151 164 118L169 211Q113 230 57 211z" fill="#31536e" stroke="#141c24" stroke-width="6"/>
-<path d="M76 146L35 108M151 146l37-37" stroke="#d8a06a" stroke-width="15" stroke-linecap="round"/>
-<path d="M30 102Q74 52 190 113" fill="none" stroke="#7b4326" stroke-width="8"/>
-<path d="M32 102Q77 56 189 113" fill="none" stroke="#e8d6a7" stroke-width="3"/>
-<path d="M33 102l-7-19M189 113l12-18" stroke="#e8d6a7" stroke-width="3"/>
-<path d="M58 210l-10 34M152 210l10 34" stroke="#28303a" stroke-width="17" stroke-linecap="round"/>
-<path d="M42 244h35M148 244h35" stroke="#151b21" stroke-width="11" stroke-linecap="round"/></svg></div><div id="cross"></div>
+<svg viewBox="0 0 230 250" aria-hidden="true">
+<defs>
+ <radialGradient id="sSkin" cx="38%" cy="28%"><stop offset="0" stop-color="#f2c28b"/><stop offset=".7" stop-color="#c98251"/><stop offset="1" stop-color="#70402d"/></radialGradient>
+ <linearGradient id="sCloth" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#405e74"/><stop offset=".5" stop-color="#243c50"/><stop offset="1" stop-color="#101d28"/></linearGradient>
+ <linearGradient id="sHat" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#405d3c"/><stop offset=".6" stop-color="#17291b"/><stop offset="1" stop-color="#09120c"/></linearGradient>
+</defs>
+<ellipse cx="113" cy="238" rx="70" ry="10" fill="#0008"/>
+<!-- hood/hat -->
+<path d="M59 57Q72 17 113 8Q154 17 168 57Q143 45 113 45T59 57Z" fill="url(#sHat)" stroke="#080f0a" stroke-width="5"/>
+<path d="M74 40Q113 22 152 40" fill="none" stroke="#c39b4b" stroke-width="7"/>
+<!-- face -->
+<path d="M69 73Q71 39 113 37Q155 39 157 73L150 123Q139 145 113 147Q87 145 76 123Z" fill="url(#sSkin)" stroke="#24150f" stroke-width="5"/>
+<ellipse cx="69" cy="92" rx="8" ry="12" fill="#b9734d"/><ellipse cx="157" cy="92" rx="8" ry="12" fill="#b9734d"/>
+<!-- brows/eyes -->
+<path d="M80 80Q91 72 103 79M123 79Q135 72 146 80" fill="none" stroke="#382118" stroke-width="6" stroke-linecap="round"/>
+<ellipse cx="92" cy="88" rx="8" ry="5" fill="#eee9dd"/><ellipse cx="135" cy="88" rx="8" ry="5" fill="#eee9dd"/>
+<circle cx="93" cy="88" r="3" fill="#17120f"/><circle cx="134" cy="88" r="3" fill="#17120f"/>
+<path d="M113 88L107 105Q112 109 119 105" fill="none" stroke="#7e482f" stroke-width="4"/>
+<!-- focused mouth -->
+<path d="M98 120Q113 128 128 120" fill="none" stroke="#4c281d" stroke-width="5" stroke-linecap="round"/>
+<!-- shirt/vest -->
+<path d="M61 132Q113 151 165 132L171 216Q113 235 55 216Z" fill="url(#sCloth)" stroke="#101923" stroke-width="6"/>
+<path d="M113 150V221" stroke="#162737" stroke-width="4"/>
+<path d="M73 151Q113 165 153 151" fill="none" stroke="#8f713c" stroke-width="5"/>
+<!-- arms and bow -->
+<path d="M64 150L36 113M158 150L188 112" stroke="#c27b4e" stroke-width="15" stroke-linecap="round"/>
+<path d="M30 106Q78 51 190 113" fill="none" stroke="#4a2819" stroke-width="10"/>
+<path d="M31 106Q78 54 190 113" fill="none" stroke="#d8c49a" stroke-width="3"/>
+<path d="M32 106L25 83M190 113L202 91" stroke="#d8c49a" stroke-width="3"/>
+<!-- arrow -->
+<path d="M35 106L189 113" stroke="#e7d7ad" stroke-width="2"/>
+<!-- trousers/boots -->
+<path d="M62 211L51 242M151 211L162 242" stroke="#26313a" stroke-width="17" stroke-linecap="round"/>
+<path d="M43 244h37M145 244h37" stroke="#11161b" stroke-width="11" stroke-linecap="round"/>
+</svg></div><div id="cross"></div>
 <button id="restart">🔄 RESTART</button><button id="fire">FIRE<br>💥</button></div>
 <div id="o"><div class="modal"><h1 id="title"></h1><p id="text"></p><button id="next"></button><button id="again">🔄 RESTART</button></div></div>
 
