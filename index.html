@@ -275,7 +275,7 @@ function fireShot(){
   },pirateDelay);
  }else{
   combo=0;updateCombo();
-  // A miss can ONLY play one of the two miss recordings.
+  // Misses use ONLY the two confirmed miss recordings.
   playPirateAudio(Math.random()<0.5?"miss":"extra");
   const insults=["💨 YOU FUCKING MISSED, YA TURNIP!","💨 YA FUCKING MELT!","💨 YA FUCKING IDIOT!","💨 YA FUCKING POTATO!","💨 NICE SHOT, YA FUCKING WALNUT!","💨 NOT EVEN FUCKING CLOSE, YA BELLEND!","💨 WHAT THE ACTUAL FUCK?!","💨 DID YOU AIM WITH YOUR FUCKING ELBOW?","💨 THAT ARROW JUST FUCKING GAVE UP!","💨 YOU COULDN'T HIT A BARN DOOR, YA TURNIP!"];
   $("hint").textContent=insults[Math.floor(Math.random()*insults.length)];
