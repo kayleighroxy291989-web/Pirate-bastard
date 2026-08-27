@@ -99,9 +99,9 @@ function playShooterAudio(which){
 
 
 const pirateAudio = {
-  hit: "pirate_hit.mp3",
-  miss: "pirate_miss_1.mp3",
-  extra: "pirate_miss_2.mp3"
+  hit: new Audio("pirate_hit.mp3"),
+  miss: new Audio("pirate_miss_1.mp3"),
+  extra: new Audio("pirate_miss_2.mp3")
 };
 Object.values(pirateAudio).forEach(a=>{a.preload="auto";a.volume=1;});
 function playPirateAudio(which){
