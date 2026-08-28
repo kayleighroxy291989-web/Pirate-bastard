@@ -164,6 +164,7 @@ header,.badge,#wind,#hint{
 @keyframes pirateMouthOpen{
   0%,64%{opacity:0} 65%,100%{opacity:1}
 }
+.shooter-speaking{animation:shooterTalk .10s steps(2,end) infinite alternate}@keyframes shooterTalk{from{transform:translateY(0) scaleY(1)}to{transform:translateY(-1px) scaleY(.985)}}
 </style></head><body><div id="game"><div class="ocean-glow"></div>
 <header><span id="stage"></span><span id="bullets"></span></header><div id="stats2">
 <span class="badge">🔥 COMBO <b id="combo">0</b></span>
@@ -296,12 +297,13 @@ const shooterAudio={
 Object.values(shooterAudio).forEach(a=>{a.preload="auto";a.volume=1;});
 function playShooterAudio(which){
  try{
-  const a=shooterAudio[which];
+  const a=shooterAudio[which],el=$("shooter");
   if(!a)return;
-  a.pause();
-  a.currentTime=0;
+  if(el)el.classList.add("shooter-speaking");
+  a.onended=()=>{if(el)el.classList.remove("shooter-speaking")};
+  a.pause();a.currentTime=0;
   const p=a.play();
-  if(p&&p.catch)p.catch(()=>{});
+  if(p&&p.catch)p.catch(()=>{if(el)el.classList.remove("shooter-speaking")});
  }catch(e){}
 }
 
@@ -479,7 +481,7 @@ function fireShot(){
   if(hp<=0){
     // Death sequence: pirate reaction -> fall -> shooter deletion line.
     setTimeout(()=>{try{$("enemy").classList.add("pirate-fall")}catch(e){}},pirateDelay);
-    setTimeout(()=>playShooterAudio("deleted"),pirateDelay+750);
+    setTimeout(()=>playPirateAudio("hit"),pirateDelay+450);
     dead=true;
     gold+=50*stage;
     localStorage.setItem("pirateSharpshooterSave",JSON.stringify({stage:stage+1,gold}));
@@ -491,9 +493,7 @@ function fireShot(){
     },pirateDelay+850);
     return;
   }
-  setTimeout(()=>{
-    playShooterAudio("pewPew");
-  },pirateDelay+650);
+  setTimeout(()=>playPirateAudio("hit"),pirateDelay+450);
  }else{
   combo=0;updateCombo();playPirateAudio("miss");missSfx();
   const insults=["💨 YOU FUCKING MISSED, YA TURNIP!","💨 YA FUCKING MELT!","💨 YA FUCKING IDIOT!","💨 YA FUCKING POTATO!","💨 NICE SHOT, YA FUCKING WALNUT!","💨 NOT EVEN CLOSE, YA BELLEND!","💨 WHAT THE ACTUAL FUCK?!","💨 DID YOU AIM WITH YOUR FUCKING ELBOW?","💨 THAT ARROW JUST FUCKING GAVE UP!","💨 YOU COULDN'T HIT A BARN DOOR, YA TURNIP!"];
