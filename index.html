@@ -173,6 +173,42 @@ header,.badge,#wind,#hint{
 @keyframes shMouthMid{0%,49%{opacity:1}50%,100%{opacity:.15}}
 @keyframes shMouthOpen{0%,54%{opacity:.05}55%,100%{opacity:1}}
 @keyframes shTeeth{0%,60%{opacity:0}61%,100%{opacity:1}}
+
+/* === V35 VISUAL LIFE PASS === */
+#enemy.pirate-character,#player.archer-character{will-change:transform,filter}
+#player.archer-character{transform-origin:50% 92%;animation:archerBreath 2.8s ease-in-out infinite}
+@keyframes archerBreath{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-2px) rotate(.35deg)}}
+#enemy.pirate-character{transform-origin:50% 92%;animation:pirateBreath 3.2s ease-in-out infinite}
+@keyframes pirateBreath{0%,100%{margin-top:0}50%{margin-top:-2px}}
+#enemy.pirate-character.pirate-speaking{animation:pirateTalkBody .22s ease-in-out infinite alternate}
+@keyframes pirateTalkBody{from{margin-top:0}to{margin-top:-1px}}
+#enemy.pirate-character.pirate-hit-react{animation:pirateHitReact .38s ease-out!important}
+@keyframes pirateHitReact{
+  0%{transform:translateX(0) rotate(0)}
+  25%{transform:translateX(-12px) rotate(-4deg)}
+  55%{transform:translateX(9px) rotate(3deg)}
+  100%{transform:translateX(0) rotate(0)}
+}
+#player.archer-character.shooter-firing{animation:archerFire .34s ease-out!important}
+@keyframes archerFire{
+  0%{transform:translateY(0) rotate(0)}
+  25%{transform:translateY(-3px) rotate(-1deg)}
+  55%{transform:translateY(1px) rotate(.8deg)}
+  100%{transform:translateY(0) rotate(0)}
+}
+.arrow-flight{position:absolute;z-index:18;pointer-events:none;font-size:30px;filter:drop-shadow(0 3px 2px #0009)}
+.arrow-flight::after{content:"";position:absolute;left:-24px;top:50%;width:28px;height:3px;background:linear-gradient(90deg,transparent,#f5e5bb);opacity:.75}
+.muzzle-flash{position:absolute;z-index:19;pointer-events:none;font-size:34px;animation:muzzleFlash .18s ease-out forwards}
+@keyframes muzzleFlash{0%{transform:scale(.5);opacity:0}30%{transform:scale(1.2);opacity:1}100%{transform:scale(1.7);opacity:0}}
+.impact-ring{position:absolute;z-index:29;pointer-events:none;width:42px;height:42px;border:3px solid #fff2c2;border-radius:50%;animation:impactRing .35s ease-out forwards}
+@keyframes impactRing{0%{transform:translate(-50%,-50%) scale(.35);opacity:1}100%{transform:translate(-50%,-50%) scale(2.2);opacity:0}}
+.damage-spark{position:absolute;z-index:30;pointer-events:none;font-size:26px;animation:damageSpark .4s ease-out forwards}
+@keyframes damageSpark{0%{transform:translate(-50%,-50%) scale(.4) rotate(0);opacity:1}100%{transform:translate(-50%,-50%) scale(1.3) rotate(25deg);opacity:0}}
+#cross{transition:transform .08s ease-out}
+#fire.fire-pulse{animation:firePulse .2s ease-out}
+@keyframes firePulse{50%{transform:scale(.93)}}
+
+.ambient-speck{will-change:transform,opacity}@keyframes ambientDrift{0%,100%{transform:translateX(-8px);opacity:.2}50%{transform:translateX(10px);opacity:.65}}
 </style></head><body><div id="game"><div class="ocean-glow"></div>
 <header><span id="stage"></span><span id="bullets"></span></header><div id="stats2">
 <span class="badge">🔥 COMBO <b id="combo">0</b></span>
@@ -377,9 +413,23 @@ function stageSfx(){tone(440,.12,"triangle",.07,100);setTimeout(()=>tone(660,.14
 
 function bulletsFor(s){return Math.min(8,5+Math.floor((s-1)/3))}
 function healthFor(s){return Math.min(3,1+Math.floor((s-1)/3))}
+
+function ambientVisuals(){
+  const g=$("game");
+  for(let i=0;i<5;i++){
+    const w=document.createElement("div");w.className="ambient-speck";
+    w.style.position="absolute";w.style.left=(8+Math.random()*84)+"%";w.style.top=(18+Math.random()*35)+"%";
+    w.style.width=(2+Math.random()*3)+"px";w.style.height="2px";w.style.borderRadius="50%";
+    w.style.background="rgba(255,255,255,.28)";w.style.pointerEvents="none";w.style.zIndex="1";
+    w.style.animation=`ambientDrift ${4+Math.random()*5}s ease-in-out infinite`;
+    g.appendChild(w);
+  }
+}
+
 function start(){
+  if(!$("game").querySelector(".ambient-speck"))ambientVisuals();
  shots=bulletsFor(stage);hp=maxhp=healthFor(stage);dead=false;combo=0;setWind();
- const enemy=$("enemy");enemy.classList.remove("pirate-fall");enemy.style.animation="none";enemy.offsetHeight;enemy.style.animation="";enemy.style.opacity=1;enemy.style.transform="";
+ const enemy=$("enemy");enemy.classList.remove("pirate-fall","pirate-hit-react");enemy.style.animation="none";enemy.offsetHeight;enemy.style.animation="";enemy.style.opacity=1;enemy.style.transform="";
  placeEnemy();movePirate();startPirateMovement();updateCombo();
  $("hint").textContent="🎯 AIM AT THE BASTARD — DRAG, THEN FIRE 🖕😎";render()
 }
@@ -472,19 +522,52 @@ function shopBuy(type,cost){
  saveUpgrades();updateCombo();$("shopmsg").textContent="😈 UPGRADE FUCKING BOUGHT."
 }
 
+
+function shooterVisualFire(){
+  const p=$("player");
+  if(p){p.classList.remove("shooter-firing");void p.offsetWidth;p.classList.add("shooter-firing");setTimeout(()=>p.classList.remove("shooter-firing"),360);}
+  const r=p.getBoundingClientRect(),m=document.createElement("div");
+  m.className="muzzle-flash";m.textContent="✨";
+  m.style.left=(r.right-25)+"px";m.style.top=(r.top+r.height*.38)+"px";
+  $("game").appendChild(m);setTimeout(()=>m.remove(),220);
+}
+function flyArrow(tx,ty,done){
+  const p=$("player").getBoundingClientRect(),g=$("game").getBoundingClientRect();
+  const sx=p.left+p.width*.78-g.left,sy=p.top+p.height*.35-g.top;
+  const a=document.createElement("div");a.className="arrow-flight";a.textContent="➵";
+  a.style.left=sx+"px";a.style.top=sy+"px";$("game").appendChild(a);
+  const dx=tx-sx,dy=ty-sy,dist=Math.hypot(dx,dy),dur=Math.max(180,Math.min(520,dist*1.5));
+  a.animate([{transform:`translate(0,0) rotate(${Math.atan2(dy,dx)*180/Math.PI}deg)`},
+             {transform:`translate(${dx}px,${dy}px) rotate(${Math.atan2(dy,dx)*180/Math.PI}deg)`}],
+            {duration:dur,easing:"cubic-bezier(.18,.7,.2,1)",fill:"forwards"});
+  setTimeout(()=>{a.remove();done&&done()},dur);
+}
+function impactVisual(x,y){
+  const g=$("game"),r=document.createElement("div"),s=document.createElement("div");
+  r.className="impact-ring";r.style.left=x+"px";r.style.top=y+"px";
+  s.className="damage-spark";s.textContent="✦";s.style.left=x+"px";s.style.top=y+"px";
+  g.append(r,s);setTimeout(()=>{r.remove();s.remove()},450);
+}
+function pirateHitVisual(){
+  const e=$("enemy");
+  e.classList.remove("pirate-hit-react");void e.offsetWidth;e.classList.add("pirate-hit-react");
+  setTimeout(()=>e.classList.remove("pirate-hit-react"),420);
+}
+
 function fireShot(){
  audioStart();if(audio?.state==="suspended")audio.resume();
  if(dead||shots<=0)return;
- shots--;fireSfx();
+ shots--;fireSfx();shooterVisualFire();$("cross").style.transform="translate(-50%,-50%) scale(.86)";setTimeout(()=>$("cross").style.transform="translate(-50%,-50%) scale(1)",100);
  let r=$("enemy").getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height*.48;
  let drift=wind*2.2,d=Math.hypot((ax+drift)-cx,ay-cy),hit=d<105,head=d<45;
  render();
  if(hit){
   let damage=head?2+bowLevel:1+Math.floor(bowLevel/2);
   if(critLevel&&Math.random()<.12*critLevel){damage*=2;boom("💥 CRITICAL!",cx,cy)}
-  hp=Math.max(0,hp-damage);hitSfx(head);
+  hp=Math.max(0,hp-damage);hitSfx(head);impactVisual(cx,cy);pirateHitVisual();
   // Hit sequence: Sharpshooter PEW first, then Pirate warning, then OW.
   playShooterAudio("pewPew");
+  flyArrow(cx-$("game").getBoundingClientRect().left,cy-$("game").getBoundingClientRect().top);
   combo++;bestCombo=Math.max(bestCombo,combo);
   goldBank+=head?8:4;saveUpgrades();updateCombo();
   boom(head?"HEADSHOT! -"+damage:"HIT! -"+damage,cx,cy);
