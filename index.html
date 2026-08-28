@@ -165,6 +165,14 @@ header,.badge,#wind,#hint{
   0%,64%{opacity:0} 65%,100%{opacity:1}
 }
 .shooter-speaking{animation:shooterTalk .10s steps(2,end) infinite alternate}@keyframes shooterTalk{from{transform:translateY(0) scaleY(1)}to{transform:translateY(-1px) scaleY(.985)}}
+#shooter-mouth .sh-mouth-mid,#shooter-mouth .sh-mouth-open,#shooter-mouth .sh-mouth-teeth{display:none}
+#player.shooter-speaking #shooter-mouth .sh-mouth-closed{display:none}
+#player.shooter-speaking #shooter-mouth .sh-mouth-mid{display:block;animation:shMouthMid .11s steps(2,end) infinite}
+#player.shooter-speaking #shooter-mouth .sh-mouth-open{display:block;animation:shMouthOpen .16s steps(2,end) infinite}
+#player.shooter-speaking #shooter-mouth .sh-mouth-teeth{display:block;animation:shTeeth .16s steps(2,end) infinite}
+@keyframes shMouthMid{0%,49%{opacity:1}50%,100%{opacity:.15}}
+@keyframes shMouthOpen{0%,54%{opacity:.05}55%,100%{opacity:1}}
+@keyframes shTeeth{0%,60%{opacity:0}61%,100%{opacity:1}}
 </style></head><body><div id="game"><div class="ocean-glow"></div>
 <header><span id="stage"></span><span id="bullets"></span></header><div id="stats2">
 <span class="badge">🔥 COMBO <b id="combo">0</b></span>
@@ -263,7 +271,12 @@ header,.badge,#wind,#hint{
 <circle cx="93" cy="88" r="3" fill="#17120f"/><circle cx="134" cy="88" r="3" fill="#17120f"/>
 <path d="M113 88L107 105Q112 109 119 105" fill="none" stroke="#7e482f" stroke-width="4"/>
 <!-- focused mouth -->
-<path d="M98 120Q113 128 128 120" fill="none" stroke="#4c281d" stroke-width="5" stroke-linecap="round"/>
+<g id="shooter-mouth">
+<path class="sh-mouth-closed" d="M98 120Q113 128 128 120" fill="none" stroke="#4c281d" stroke-width="5" stroke-linecap="round"/>
+<path class="sh-mouth-mid" d="M99 120Q113 132 127 120Q124 128 113 130Q102 128 99 120Z" fill="#351913" stroke="#24120f" stroke-width="2"/>
+<path class="sh-mouth-open" d="M97 119Q113 135 129 119Q126 138 113 140Q100 138 97 119Z" fill="#24100d" stroke="#160b08" stroke-width="3"/>
+<path class="sh-mouth-teeth" d="M102 122Q113 128 124 122L122 127Q113 130 104 127Z" fill="#eee4d4"/>
+</g>
 <!-- shirt/vest -->
 <path d="M61 132Q113 151 165 132L171 216Q113 235 55 216Z" fill="url(#sCloth)" stroke="#101923" stroke-width="6"/>
 <path d="M113 150V221" stroke="#162737" stroke-width="4"/>
@@ -297,7 +310,7 @@ const shooterAudio={
 Object.values(shooterAudio).forEach(a=>{a.preload="auto";a.volume=1;});
 function playShooterAudio(which){
  try{
-  const a=shooterAudio[which],el=$("shooter");
+  const a=shooterAudio[which],el=$("player");
   if(!a)return;
   if(el)el.classList.add("shooter-speaking");
   a.onended=()=>{if(el)el.classList.remove("shooter-speaking")};
@@ -310,16 +323,18 @@ function playShooterAudio(which){
 const pirateAudio={
  hit:new Audio("pirate_hit.mp3"),
  hey:new Audio("pirate_hey.mp3"),
- watch:new Audio("pirate_watch_it.mp3")
+ watch:new Audio("pirate_watch_it.mp3"),
+ nooooo:new Audio("pirate_nooooo.mp3")
 };
 Object.values(pirateAudio).forEach(a=>{a.preload="auto";a.volume=1;});
 function playPirateWarning(){
-  const line = Math.random() < 0.5 ? "hey" : "watch";
-  const a = pirateAudio[line];
-  if(!a) return;
-  a.currentTime = 0;
-  const p = a.play();
-  if(p && p.catch) p.catch(()=>{});
+ const line=Math.random()<0.5?"hey":"watch",a=pirateAudio[line],el=$("enemy");
+ if(!a)return;
+ if(el)el.classList.add("pirate-speaking");
+ a.onended=()=>{if(el)el.classList.remove("pirate-speaking")};
+ a.currentTime=0;
+ const p=a.play();
+ if(p&&p.catch)p.catch(()=>{if(el)el.classList.remove("pirate-speaking")});
 }
 
 function playPirateAudio(which){
@@ -468,8 +483,8 @@ function fireShot(){
   let damage=head?2+bowLevel:1+Math.floor(bowLevel/2);
   if(critLevel&&Math.random()<.12*critLevel){damage*=2;boom("💥 CRITICAL!",cx,cy)}
   hp=Math.max(0,hp-damage);hitSfx(head);
-  // Pirate reacts first, then gives a warning, then the shooter answers.
-  playPirateAudio("hit");
+  // Hit sequence: Sharpshooter PEW first, then Pirate warning, then OW.
+  playShooterAudio("pewPew");
   combo++;bestCombo=Math.max(bestCombo,combo);
   goldBank+=head?8:4;saveUpgrades();updateCombo();
   boom(head?"HEADSHOT! -"+damage:"HIT! -"+damage,cx,cy);
@@ -477,11 +492,12 @@ function fireShot(){
   $("enemy").style.transform="translateX(-12px) rotate(-5deg)";
   setTimeout(()=>$("enemy").style.transform="",120);
   const pirateDelay=head?900:850;
-  setTimeout(()=>playPirateWarning(),pirateDelay+250);
+  setTimeout(()=>playPirateWarning(),pirateDelay);
   if(hp<=0){
     // Death sequence: pirate reaction -> fall -> shooter deletion line.
     setTimeout(()=>{try{$("enemy").classList.add("pirate-fall")}catch(e){}},pirateDelay);
-    setTimeout(()=>playPirateAudio("hit"),pirateDelay+450);
+    setTimeout(()=>playPirateAudio("hit"),pirateDelay+650);
+    setTimeout(()=>playPirateAudio("nooooo"),pirateDelay+1100);
     dead=true;
     gold+=50*stage;
     localStorage.setItem("pirateSharpshooterSave",JSON.stringify({stage:stage+1,gold}));
