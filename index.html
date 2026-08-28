@@ -291,8 +291,11 @@ header,.badge,#wind,#hint{
 const shooterAudio={
  gotcha:new Audio("shooter_gotcha.mp3"),
  headshot:new Audio("shooter_bullseye.mp3"),
- pissEasy:new Audio("shooter_piss_easy.mp3")
+ pissEasy:new Audio("shooter_piss_easy.mp3"),
+ eatShit:new Audio("shooter_eat_shit.mp3"),
+ pewPew:new Audio("shooter_pew_pew.mp3")
 };
+
 
 Object.values(shooterAudio).forEach(a=>{a.preload="auto";a.volume=1;});
 function playShooterAudio(which){
@@ -484,7 +487,7 @@ function fireShot(){
   }
   setTimeout(()=>{
     if(head) playShooterAudio("headshot");
-    else playShooterAudio(Math.random()<0.5 ? "gotcha" : "pissEasy");
+    else playShooterAudio(["gotcha","pissEasy","eatShit","pewPew"][Math.floor(Math.random()*4)]);
   },pirateDelay);
  }else{
   combo=0;updateCombo();playPirateAudio("miss");missSfx();
