@@ -311,15 +311,6 @@ const pirateAudio={
  watch:new Audio("pirate_watch_it.mp3")
 };
 Object.values(pirateAudio).forEach(a=>{a.preload="auto";a.volume=1;});
-function playPirateWarning(){
-  const line = Math.random() < 0.5 ? "hey" : "watch";
-  const a = pirateAudio[line];
-  if(!a) return;
-  a.currentTime = 0;
-  const p = a.play();
-  if(p && p.catch) p.catch(()=>{});
-}
-
 function playPirateAudio(which){
  try{
   const a=pirateAudio[which];if(!a)return;
@@ -352,8 +343,7 @@ function noise(d=.1,gain=.04){
  let s=audio.createBufferSource(),g=audio.createGain(),t=audio.currentTime;s.buffer=b;
  g.gain.setValueAtTime(gain,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(g).connect(audio.destination);s.start()
 }
-function fireSfx(){
-  if(Math.random()<0.18) playPirateWarning();tone(220,.08,"triangle",.08,260);noise(.05,.02)}
+function fireSfx(){tone(220,.08,"triangle",.08,260);noise(.05,.02)}
 function hitSfx(head){tone(head?430:150,.11,"square",.08,head?180:-30);if(head)tone(760,.15,"triangle",.05,-180)}
 function missSfx(){tone(80,.08,"square",.04,-20)}
 function deleteSfx(){tone(90,.3,"sawtooth",.11,500);setTimeout(()=>tone(460,.38,"triangle",.09,400),90);setTimeout(()=>noise(.3,.07),120)}
