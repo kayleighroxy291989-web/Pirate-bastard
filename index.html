@@ -311,6 +311,15 @@ const pirateAudio={
  watch:new Audio("pirate_watch_it.mp3")
 };
 Object.values(pirateAudio).forEach(a=>{a.preload="auto";a.volume=1;});
+function playPirateWarning(){
+  const line = Math.random() < 0.5 ? "hey" : "watch";
+  const a = pirateAudio[line];
+  if(!a) return;
+  a.currentTime = 0;
+  const p = a.play();
+  if(p && p.catch) p.catch(()=>{});
+}
+
 function playPirateAudio(which){
  try{
   const a=pirateAudio[which];if(!a)return;
@@ -457,7 +466,7 @@ function fireShot(){
   let damage=head?2+bowLevel:1+Math.floor(bowLevel/2);
   if(critLevel&&Math.random()<.12*critLevel){damage*=2;boom("💥 CRITICAL!",cx,cy)}
   hp=Math.max(0,hp-damage);hitSfx(head);
-  // Pirate reacts first. Shooter speaks only after the pirate clip has finished.
+  // Pirate reacts first, then gives a warning, then the shooter answers.
   playPirateAudio("hit");
   combo++;bestCombo=Math.max(bestCombo,combo);
   goldBank+=head?8:4;saveUpgrades();updateCombo();
@@ -466,6 +475,7 @@ function fireShot(){
   $("enemy").style.transform="translateX(-12px) rotate(-5deg)";
   setTimeout(()=>$("enemy").style.transform="",120);
   const pirateDelay=head?900:850;
+  setTimeout(()=>playPirateWarning(),pirateDelay+250);
   if(hp<=0){
     // Death sequence: pirate reaction -> fall -> shooter deletion line.
     setTimeout(()=>{try{$("enemy").classList.add("pirate-fall")}catch(e){}},pirateDelay);
@@ -483,7 +493,7 @@ function fireShot(){
   }
   setTimeout(()=>{
     playShooterAudio("pewPew");
-  },pirateDelay);
+  },pirateDelay+650);
  }else{
   combo=0;updateCombo();playPirateAudio("miss");missSfx();
   const insults=["💨 YOU FUCKING MISSED, YA TURNIP!","💨 YA FUCKING MELT!","💨 YA FUCKING IDIOT!","💨 YA FUCKING POTATO!","💨 NICE SHOT, YA FUCKING WALNUT!","💨 NOT EVEN CLOSE, YA BELLEND!","💨 WHAT THE ACTUAL FUCK?!","💨 DID YOU AIM WITH YOUR FUCKING ELBOW?","💨 THAT ARROW JUST FUCKING GAVE UP!","💨 YOU COULDN'T HIT A BARN DOOR, YA TURNIP!"];
